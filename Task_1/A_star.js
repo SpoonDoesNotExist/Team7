@@ -126,10 +126,62 @@ stateColors.set("wall","#AE33FF");
 let currentState=states[0];
 
 
+let uniqueStates=new Map();
+uniqueStates.set(
+    "start",{
+        isDefined: false,
+        element: false,
+    }
+);
+uniqueStates.set(
+    "finish",{
+        isDefined: false,
+        element: false,
+    }
+);
+
+
+
+function handleUniqueStates(element)
+{
+    console.log(element.name);
+    console.log( uniqueStates.get(currentState));
+
+    switch(currentState){
+        case "start":
+        case "finish":{
+            if(uniqueStates.get(currentState).isDefined){
+                if(uniqueStates.get(currentState).element==element){
+                    uniqueStates.get(currentState).isDefined=false;
+                    uniqueStates.get(currentState).element=false;
+                }
+                else{
+                    uniqueStates.get(currentState).element.style.backgroundColor=stateColors.get("empty");
+                    uniqueStates.get(currentState).element.name="empty";
+                    uniqueStates.get(currentState).element=element;
+                    
+                }
+            }
+            else{
+                uniqueStates.get(currentState).isDefined=true;
+                uniqueStates.get(currentState).element=element;
+            }
+            break;
+        }
+    }
+
+    console.log(uniqueStates.get(currentState));
+    console.log(`HandleUniqueStates processed`);
+}
+
+
+
 
 function boardElementClickHandler(){
 
     console.log(`BoardElementClickHandler. Processing element ${this.id}`);
+
+    handleUniqueStates(this);
 
     if(this.name==currentState){
         this.name="empty";
@@ -139,6 +191,9 @@ function boardElementClickHandler(){
         this.name=currentState;
         this.style.backgroundColor=stateColors.get(currentState);
     }
+
+    console.log(this.name);
+    console.log(`BoardElementClickHandler processed`);
 }
 
 
@@ -153,8 +208,6 @@ function generateField(n){
 
     for (let i = 0; i < n; i++){
         let board_row= document.createElement("tr");
-
-        board_row.id= i;
 
         for (let j = 0; j < n; j++){
             let board_elem= document.createElement('td');
