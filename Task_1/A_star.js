@@ -180,6 +180,20 @@ function handleUniqueStates(element)
         }
     }
 
+    /*
+    
+        СДЕЛАТЬ НОРМАЛЬНУЮ ОБРАБОТКУ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    */
+    if(currentState!="start" &&uniqueStates.get("start").element==element){
+        uniqueStates.get("start").isDefined=false;
+        uniqueStates.get("start").element=false;
+    }
+    if(currentState!="finish" &&uniqueStates.get("finish").element==element){
+        uniqueStates.get("finish").isDefined=false;
+        uniqueStates.get("finish").element=false;
+    }
+
     console.log(uniqueStates.get(currentState));
     console.log(`HandleUniqueStates processed`);
 }
