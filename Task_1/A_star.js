@@ -41,19 +41,38 @@ class Board
 
 
 
+
+
 let currBoard=new Board(5,5);
 
 const form_rows=document.getElementById("form_rows");
 const form_cols=document.getElementById("form_cols");
 const form_button=document.getElementById("form_button");
 
+function checkSizeValues(rows,cols){
+    if(rows<=0||cols<=0){
+
+        console.log(`Invalid size values ${rows} ${cols}`);
+
+        form_rows.value="";
+        form_cols.value="";
+
+        form_rows.placeholder="Invalid size";
+        form_cols.placeholder="Invalid size";
+
+        return false;
+    }
+    return true;
+}
 
 form_button.onclick=()=>{
-    console.log(`Size changed to ${form_rows.value}x${form_cols.value}`);
+    if(checkSizeValues(form_rows.value,form_cols.value)){
 
-    //check values
-    currBoard= new Board(form_rows.value,form_cols.value);
-    //Draw_new_board();
+        console.log(`Size changed to ${form_rows.value}x${form_cols.value}`);
+
+        currBoard= new Board(form_rows.value,form_cols.value);
+        //Draw_new_board();
+    }
 }
 
 
@@ -62,7 +81,7 @@ form_button.onclick=()=>{
 const algButton = document.getElementById("alg");
 
 algButton.onclick=function(){
-    console.log("Before for");
+    //console.log("Before for");
     for(let i=0;i<currBoard.m;i++)
     {
         for(let j=0;j<currBoard.n;j++)
