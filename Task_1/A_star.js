@@ -1,3 +1,4 @@
+/*
 let backButton = document.getElementById("back");
 
 backButton.onclick = function () {
@@ -90,4 +91,117 @@ algButton.onclick=function(){
         }
         console.log("|");
     }
+
+    
 }
+*/
+
+"use strict"
+
+let size = document.getElementById("size")
+
+function checkSizeValue(size_value){
+    if(size_value<=0){
+
+        console.log(`Invalid size value ${size_value}`);
+
+        size.value="";
+        size.placeholder="Invalid size";
+
+        return false;
+    }
+    return true;
+}
+
+
+
+let states=["empty","start","finish","wall"];
+
+let stateColors = new Map();
+stateColors.set("empty","#009091");
+stateColors.set("start","#75FF33");
+stateColors.set("finish","#FF5733");
+stateColors.set("wall","#AE33FF");
+
+let currentState=states[0];
+
+
+
+function boardElementClickHandler(){
+
+    console.log(`BoardElementClickHandler. Processing element ${this.id}`);
+
+    if(this.name==currentState){
+        this.name="empty";
+        this.style.backgroundColor=stateColors.get("empty");
+    }
+    else{
+        this.name=currentState;
+        this.style.backgroundColor=stateColors.get(currentState);
+    }
+}
+
+
+
+const board_block= document.getElementById("board_block")
+
+function generateField(n){
+    board_block.innerHTML="";
+    board_block.width="100%";
+
+    n = n%100;
+
+    for (let i = 0; i < n; i++){
+        let board_row= document.createElement("tr");
+
+        board_row.id= i;
+
+        for (let j = 0; j < n; j++){
+            let board_elem= document.createElement('td');
+
+            board_elem.class="board_elem";
+            board_elem.name="empty";
+            board_elem.id = i*n + j;
+            board_elem.onclick=boardElementClickHandler;
+            
+            board_elem.textContent="0";
+            board_elem.style.backgroundColor="#009091";
+            board_elem.style.border="3px solid black";
+
+            board_row.append(board_elem);
+        }
+        board_block.append(board_row);
+    }
+}
+
+
+
+let button = document.getElementById("size_button")
+
+button.onclick = () => {
+    if(checkSizeValue(size.value)){
+
+        console.log(`Size value is: ${size.value}`);
+        
+        generateField(size.value);
+    }
+    
+}
+
+
+
+function changeState(){
+    currentState= this.name;
+
+    console.log(`Current state: ${currentState}`);
+}
+
+let state1=document.getElementById("state1");
+let state2=document.getElementById("state2");
+let state3=document.getElementById("state3");
+let state4 = document.getElementById("state4");
+
+state1.onclick =changeState;
+state2.onclick =changeState;
+state3.onclick =changeState;
+state4.onclick =changeState;

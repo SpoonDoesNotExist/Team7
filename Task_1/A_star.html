@@ -4,27 +4,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A_star</title>
-    <link rel="stylesheet" href="A_star.css">
+    <title>experiments</title>
 </head>
+
 <body>
-    <button id="back"></button><br>
+    <div id = "block1">
+            <input type="number" id="size" value="7" >
+            Введите размер поля. Для генерации нажмите клавишу space<br>
+            <input type="checkbox" id="dioganal"> Движение по диагоналям возможно<br>
+            <input type="button" id="size_button" value="применить"> 
+    </div>
 
+    <table id="board_block"></table>
 
-    <br><br><br>
-    <button id="alg">Start Algorithm</button>
-    <br><br><br>
-
-
-    <p>
-        <label for="form_rows">Rows: </label>
-            <input type="number" id="form_rows" value="5" placeholder="5"><br>
-
-        <label for="form_cols">Columns: </label>
-            <input type="number" id="form_cols" value="5" placeholder="5"><br>
-
-        <button type="button" id="form_button">Create board</button>
-    </p>
+    <div id="states_block">
+        States:<br>
+        <button id="state1" name="empty">Empty</button><br>
+        <button id="state2" name="start">Start</button><br>
+        <button id="state3" name="finish">Stop</button><br>
+        <button id="state4" name="wall">Wall</button><br>
+    </div>
 
 
     <script src="A_star.js"></script>

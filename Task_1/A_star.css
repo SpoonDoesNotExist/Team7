@@ -9,3 +9,8 @@
     border-radius: 60px;
     outline: none;
 }
+
+
+#board_block{
+    width: 100%;
+}
