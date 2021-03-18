@@ -24,7 +24,7 @@ header {
 footer {
     border-top: 20px silver solid;
     float: bottom;
-    position: absolute;
+    position: relative;
     width: 100%;
     bottom: 0;
 }

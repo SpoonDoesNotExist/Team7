@@ -56,10 +56,10 @@ body {
     left:5px;
     right:5px;
     border-radius: 25%;
-    background-color: cadetblue;
+    background-color: #5f9ea0;
 }
 
-#search {
+#start_alg {
     position: absolute;
     bottom: 5%;
     right: 25%;
@@ -95,7 +95,7 @@ body {
     margin: 0;
     padding: 0;
     border: 1px solid rgb(0, 0, 0);
-    background-color: #009091;
+    background-color: #5f9ea0;
 }
 
 .board_elem {
