@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+}
+
+header, #headTitle, #footerText {
+    margin: 0;
+    padding: 0;
+}
+
+header, footer {
+    text-align: center;
+    height: 100px;
+    color:rgb(255, 255, 255);
+    font-size: 30px;
+    line-height: 100px;
+    background-color: black;
+}
+
+header {
+    border-bottom: 20px silver solid;
+    float: top;
+}
+
+footer {
+    border-top: 20px silver solid;
+    float: bottom;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}

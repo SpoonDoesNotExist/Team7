@@ -5,30 +5,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>experiments</title>
+    <link rel="stylesheet" href="A_star.css">
 </head>
 
 <body>
-    <div id = "block1">
-            <input type="number" id="size" value="7" >
-            Введите размер поля. Для генерации нажмите клавишу space<br>
-            <input type="checkbox" id="dioganal"> Движение по диагоналям возможно<br>
+    <aside id="sidePanel">
+        <div id = "block1">
+            <label for="size" id="forSize">Введите размер поля:</label>
+                <input type="number" maxlength="2" id="size" placeholder="0_o" min="1" max="99">
             <input type="button" id="size_button" value="применить"> 
+        </div>
+        <div id="states_block">
+            <span id="">States:</span>
+            <button id="state1" name="empty">Empty</button><br>
+            <button id="state2" name="start">Start</button><br>
+            <button id="state3" name="finish">Stop</button><br>
+            <button id="state4" name="wall">Wall</button><br>
+        </div>
+
+        <div id="additSection">
+            <label for="diagonal">Движение по диагонали</label>
+                <input type="checkbox" id="diagonal"><br>
+            <ul id="additSettings" hidden>
+                <li>
+                    <label for="cutAngle" id="forMoreWeight">Затратное движение по диагонали</label>
+                    <input type="checkbox" id="moreWeight">
+                </li>
+                <li><label for="cutAngle" id="forCut">Срезать углы</label>
+                    <input type="checkbox" id="cutAngle">
+                </li>
+            </ul>
+            <button id="start_alg">Начать поиск</button>
+        </div>
+    </aside>
+
+    <div id="forTable">
+        <table id="board_block" hidden></table>
     </div>
-
-    <table id="board_block"></table>
-
-    <div id="states_block">
-        States:<br>
-        <button id="state1" name="empty">Empty</button><br>
-        <button id="state2" name="start">Start</button><br>
-        <button id="state3" name="finish">Stop</button><br>
-        <button id="state4" name="wall">Wall</button><br>
-    </div>
-
-
-    <br><br><br>
-    <button id="start_alg">Start Algorithm</button>
-
     <script src="A_star.js"></script>
 </body>
 </html>
