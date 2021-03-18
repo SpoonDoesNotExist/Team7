@@ -292,33 +292,46 @@ function generateField(n){
 }
 
 
-
+//Задержка.
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
 //Матрица для текущей доски.
-let currBoard
+let currBoard=null;
+
+
+function boardIsCreated(){
+    if(currBoard==null){
+        alert("Please create the board");
+        return false;
+    }
+    return true;
+}
+
 
 //Кнопка для запуска алгоритма.
 let startAlgorithmButton=document.getElementById("start_alg");
 
 
 startAlgorithmButton.onclick=async function(){
-    if(true){///Если на доске есть начало и конец/
+    if(boardIsCreated())
+    {
+        if(true){///Если на доске есть начало и конец/
 
-        for(let i=0;i<currBoard.m;i++)
-        {
-            for(let j=0;j<currBoard.n;j++)
+            for(let i=0;i<currBoard.m;i++)
             {
-                //console.log(currBoard.board_matrix[i][j]);
+                for(let j=0;j<currBoard.n;j++)
+                {
+                    //console.log(currBoard.board_matrix[i][j]);
 
-                await sleep(500);
-                board_block.rows[i].cells[j].style.backgroundColor=stateColors.get("start");
-            }
-        console.log("|");
-        }        
+                    await sleep(500);
+                    board_block.rows[i].cells[j].style.backgroundColor=stateColors.get("start");
+                }
+            console.log("|");
+            }        
+        }
     }
 }
 
