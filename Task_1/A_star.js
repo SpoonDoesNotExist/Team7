@@ -158,10 +158,10 @@ let states=["empty","start","finish","wall"];
 
 //Цвета для состояний.
 let stateColors = new Map();
-stateColors.set("empty","#009091");
-stateColors.set("start","#75FF33");
-stateColors.set("finish","#FF5733");
-stateColors.set("wall","#AE33FF");
+stateColors.set("empty","#a49582");
+stateColors.set("start","#bc7837");
+stateColors.set("finish","#3f0d16");
+stateColors.set("wall","#2d2f28");
 
 //Начальное состояние доски - empty.
 let currentState=states[0];
@@ -282,7 +282,7 @@ function generateField(n){
             board_elem.onclick=boardElementClickHandler;        //Обработчик нажатия на элемент.
             
             board_elem.textContent="0";
-            board_elem.style.backgroundColor="#009091";
+            board_elem.style.backgroundColor=stateColors.get("empty");
             board_elem.style.border="3px solid black";
 
             board_row.append(board_elem);                       //Добавляем элемент в строку.
