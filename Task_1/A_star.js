@@ -97,6 +97,43 @@ algButton.onclick=function(){
 */
 
 "use strict"
+
+class Point
+{
+    constructor(i,j){
+        this.i=i;
+        this.j=j;
+    }
+}
+
+class Cell{
+    constructor(){
+        this.F=5;
+        this.G=0;
+        this.H=0;
+        this.parent=new Point(0,0);
+    }
+}
+
+class Board
+{
+    constructor(m,n){
+        this.m=m;
+        this.n=n;
+
+        this.board_matrix=new Array(m);  
+        for(let i=0;i<m;i++){
+            this.board_matrix[i]=new Array(n);
+            for(let j=0;j<n;j++){
+                this.board_matrix[i][j]=new Cell();
+            }
+        }
+    }
+}
+
+
+
+
 //Выбор размера доски.
 let size = document.getElementById("size")
 
@@ -256,6 +293,38 @@ function generateField(n){
 
 
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+//Матрица для текущей доски.
+let currBoard
+
+//Кнопка для запуска алгоритма.
+let startAlgorithmButton=document.getElementById("start_alg");
+
+
+startAlgorithmButton.onclick=async function(){
+    if(true){///Если на доске есть начало и конец/
+
+        for(let i=0;i<currBoard.m;i++)
+        {
+            for(let j=0;j<currBoard.n;j++)
+            {
+                //console.log(currBoard.board_matrix[i][j]);
+
+                await sleep(500);
+                board_block.rows[i].cells[j].style.backgroundColor=stateColors.get("start");
+            }
+        console.log("|");
+        }        
+    }
+}
+
+
+
+
 //Кнопка ввода размера доски.
 let button = document.getElementById("size_button")
 
@@ -264,6 +333,7 @@ button.onclick = () => {
 
         console.log(`Size value is: ${size.value}`);
         
+        currBoard=new Board(size.value,size.value);
         generateField(size.value);          
     }
 }
