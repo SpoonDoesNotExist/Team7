@@ -101,13 +101,13 @@ algButton.onclick=function(){
 let size = document.getElementById("size")
 
 //Валидация введенного размера.
-function checkSizeValue(size_value){
-    if(size_value<=0){                                      
+function checkSizeValue(size_value) {
+    if (size_value <= 0) {
 
         console.log(`Invalid size value ${size_value}`);
 
-        size.value="";
-        size.placeholder="Invalid size";
+        size.value = "";
+        size.placeholder = "Invalid size";
 
         return false;
     }
@@ -117,32 +117,32 @@ function checkSizeValue(size_value){
 
 
 //Состояния для элементов доски.
-let states=["empty","start","finish","wall"];
+let states = ["empty", "start", "finish", "wall"];
 
 //Цвета для состояний.
 let stateColors = new Map();
-stateColors.set("empty","#009091");
-stateColors.set("start","#75FF33");
-stateColors.set("finish","#FF5733");
-stateColors.set("wall","#AE33FF");
+stateColors.set("empty", "#009091");
+stateColors.set("start", "#75FF33");
+stateColors.set("finish", "#FF5733");
+stateColors.set("wall", "#AE33FF");
 
 //Начальное состояние доски - empty.
-let currentState=states[0];
+let currentState = states[0];
 
 
 //Уникальные состояния - start и finish.
-let uniqueStates=new Map();
+let uniqueStates = new Map();
 uniqueStates.set(
-    "start",{
-        isDefined: false,   //Есть ли на доске start.
-        element: false,     //Если есть, то храним этот элемент.
-    }
+    "start", {
+    isDefined: false,   //Есть ли на доске start.
+    element: false,     //Если есть, то храним этот элемент.
+}
 );
 uniqueStates.set(
-    "finish",{
-        isDefined: false,   //Есть ли на доске finish.
-        element: false,     //Если есть, то храним этот элемент.
-    }
+    "finish", {
+    isDefined: false,   //Есть ли на доске finish.
+    element: false,     //Если есть, то храним этот элемент.
+}
 );
 
 
@@ -151,31 +151,33 @@ uniqueStates.set(
     Если на доске уже есть start(finish), то сначала делаем старый empty, 
     потом создаем новый start(finish). 
 */
-function handleUniqueStates(element)
-{
+function handleUniqueStates(element) {
     console.log(element.name);
-    console.log( uniqueStates.get(currentState));
+    console.log(uniqueStates.get(currentState));
 
     //Если находимся в состоянии start(finish)
-    switch(currentState){
+    switch (currentState) {
         case "start":
-        case "finish":{
-            if(uniqueStates.get(currentState).isDefined){               //Если на доске уже есть start(finish).
-                if(uniqueStates.get(currentState).element==element){    //Если мы нажимаем на этот самый start(finish).
-                    uniqueStates.get(currentState).isDefined=false;     //Тогда больше на доске нет start(finish). (т.к. повторное нажатие делает клетку empty) 
-                    uniqueStates.get(currentState).element=false;       
+        case "finish": {
+            if (uniqueStates.get(currentState).isDefined) {               //Если на доске уже есть start(finish).
+                if (uniqueStates.get(currentState).element == element) {    //Если мы нажимаем на этот самый start(finish).
+                    uniqueStates.get(currentState).isDefined = false;     //Тогда больше на доске нет start(finish). (т.к. повторное нажатие делает клетку empty) 
+                    uniqueStates.get(currentState).element = false;
                 }
-                else{                                                                                       //Если это другая клетка.
-                    uniqueStates.get(currentState).element.style.backgroundColor=stateColors.get("empty");  //Делаем старую empty.
-                    uniqueStates.get(currentState).element.name="empty";                                    
-                    uniqueStates.get(currentState).element=element;                                         //Записываем текущую клетку в качестве start(finish).
-                    
+                else {                                                                                       //Если это другая клетка.
+                    uniqueStates.get(currentState).element.style.backgroundColor = stateColors.get("empty");  //Делаем старую empty.
+                    uniqueStates.get(currentState).element.name = "empty";
+                    uniqueStates.get(currentState).element = element;                                         //Записываем текущую клетку в качестве start(finish).
+
                 }
             }
-            else{                                                       //Если еще нет start(finish).
-                uniqueStates.get(currentState).isDefined=true;          //Записываем текущую клетку в качестве start(finish).
-                uniqueStates.get(currentState).element=element;
+            else {                                                       //Если еще нет start(finish).
+                uniqueStates.get(currentState).isDefined = true;          //Записываем текущую клетку в качестве start(finish).
+                uniqueStates.get(currentState).element = element;
             }
+            break;
+        }
+        default: {
             break;
         }
     }
@@ -185,13 +187,13 @@ function handleUniqueStates(element)
         СДЕЛАТЬ НОРМАЛЬНУЮ ОБРАБОТКУ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
     */
-    if(currentState!="start" &&uniqueStates.get("start").element==element){
-        uniqueStates.get("start").isDefined=false;
-        uniqueStates.get("start").element=false;
+    if (currentState != "start" && uniqueStates.get("start").element == element) {
+        uniqueStates.get("start").isDefined = false;
+        uniqueStates.get("start").element = false;
     }
-    if(currentState!="finish" &&uniqueStates.get("finish").element==element){
-        uniqueStates.get("finish").isDefined=false;
-        uniqueStates.get("finish").element=false;
+    if (currentState != "finish" && uniqueStates.get("finish").element == element) {
+        uniqueStates.get("finish").isDefined = false;
+        uniqueStates.get("finish").element = false;
     }
 
     console.log(uniqueStates.get(currentState));
@@ -201,20 +203,20 @@ function handleUniqueStates(element)
 
 
 //Обработчик нажатий на элементы доски.
-function boardElementClickHandler(){
+function boardElementClickHandler() {
 
     console.log(`BoardElementClickHandler. Processing element ${this.id}`);
 
     //Проверяем уникальность start(finish).
     handleUniqueStates(this);
 
-    if(this.name==currentState){                                //Если текщее состояние совпадает с состоянием клетки.
-        this.name="empty";                                      //Делаем ее empty. (своего рода отмена).
-        this.style.backgroundColor=stateColors.get("empty");
+    if (this.name == currentState) {                                //Если текщее состояние совпадает с состоянием клетки.
+        this.name = "empty";                                      //Делаем ее empty. (своего рода отмена).
+        this.style.backgroundColor = stateColors.get("empty");
     }
-    else{                                                       //Иначе изменим состояние текущей клетки.
-        this.name=currentState;                                 
-        this.style.backgroundColor=stateColors.get(currentState);
+    else {                                                       //Иначе изменим состояние текущей клетки.
+        this.name = currentState;
+        this.style.backgroundColor = stateColors.get(currentState);
     }
 
     console.log(this.name);
@@ -224,30 +226,45 @@ function boardElementClickHandler(){
 
 
 //Доска, на которой находятся элементы. (является table).
-const board_block= document.getElementById("board_block")
+const board_block = document.getElementById("board_block")
 
 //Создает доску нужного размера.
-function generateField(n){
-    board_block.innerHTML="";
-    board_block.width="100%";
+function generateField(n) {
+    board_block.innerHTML = "";
+    board_block.hidden = false;
 
-    n = n%100;
+    n = n % 100;
 
-    for (let i = 0; i < n; i++){
-        let board_row= document.createElement("tr");            //Создаем строку.
+    for (let i = 0; i < n; i++) {
+        let board_row = document.createElement("tr");            //Создаем строку.
+        for (let j = 0; j < n; j++) {
+            let board_elem = document.createElement('td');       //Создаем элемент стороки.
 
-        for (let j = 0; j < n; j++){
-            let board_elem= document.createElement('td');       //Создаем элемент стороки.
+            board_elem.className = "board_elem";
+            board_elem.name = "empty";
+            board_elem.id = i * n + j;
+            board_elem.onclick = boardElementClickHandler;        //Обработчик нажатия на элемент.
+            board_elem.style.fontSize = 300 / n + "px";
 
-            board_elem.class="board_elem";
-            board_elem.name="empty";
-            board_elem.id = i*n + j;
-            board_elem.onclick=boardElementClickHandler;        //Обработчик нажатия на элемент.
-            
-            board_elem.textContent="0";
-            board_elem.style.backgroundColor="#009091";
-            board_elem.style.border="3px solid black";
+            let f = document.createElement('div');
+            f.innerText = 2;
+            f.className = "f";
+            f.id = `f${board_elem.id}`;
+            board_elem.append(f);
 
+            let g = document.createElement('div');
+            g.innerText = 14 * 99;
+            g.className = "g";
+            g.id = `g${board_elem.id}`;
+            board_elem.append(g);
+
+            let h = document.createElement('div');
+            h.innerText = 1234;
+            h.className = "h";
+            h.id = `h${board_elem.id}`;
+            board_elem.append(h);
+
+            board_elem.value = "<span class=\"f\">f</span><br>";
             board_row.append(board_elem);                       //Добавляем элемент в строку.
         }
         board_block.append(board_row);                          //Добавляем всю строку в таблицу.
@@ -260,30 +277,48 @@ function generateField(n){
 let button = document.getElementById("size_button")
 
 button.onclick = () => {
-    if(checkSizeValue(size.value)){
+    if (checkSizeValue(size.value)) {
 
         console.log(`Size value is: ${size.value}`);
-        
-        generateField(size.value);          
+
+        generateField(size.value);
     }
 }
 
 
 
 //Изменяет текущее состояние.
-function changeState(){
-    currentState= this.name;
+function changeState() {
+    currentState = this.name;
 
     console.log(`Current state: ${currentState}`);
 }
 
 //Кнопки выбора состояния.
-let state1=document.getElementById("state1");
-let state2=document.getElementById("state2");
-let state3=document.getElementById("state3");
+let state1 = document.getElementById("state1");
+let state2 = document.getElementById("state2");
+let state3 = document.getElementById("state3");
 let state4 = document.getElementById("state4");
 
-state1.onclick =changeState;
-state2.onclick =changeState;
-state3.onclick =changeState;
-state4.onclick =changeState;
+state1.onclick = changeState;
+state2.onclick = changeState;
+state3.onclick = changeState;
+state4.onclick = changeState;
+
+
+// Кнопки движения по диагонали и среза углов
+let diagonal = document.getElementById('diagonal');
+let additSettings = document.getElementById('additSettings');
+
+diagonal.onclick = () => {
+    additSettings.hidden = !additSettings.hidden;
+}
+
+// Можно ввести максимум 2 цифры в размер поля
+let sizeInput = document.getElementById('size');
+sizeInput.oninput = function() {
+    this.value = this.value.slice(0, this.maxLength);
+    if (this.value == 0) {
+        this.value = "";
+    }
+}
