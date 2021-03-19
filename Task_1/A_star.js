@@ -326,7 +326,7 @@ function generateField(n) {
             board_elem.id = i * n + j;
             board_elem.onclick = boardElementClickHandler;        //Обработчик нажатия на элемент.
 
-            board_elem.style.fontSize = 300 / n + "px";
+            board_elem.style.fontSize = 16.5/n + "vw";
             
             let f = document.createElement('div');
             f.innerText = 2;
@@ -475,10 +475,10 @@ function changeState() {
 }
 
 //Кнопки выбора состояния.
-let state1 = document.getElementById("state1");
-let state2 = document.getElementById("state2");
-let state3 = document.getElementById("state3");
-let state4 = document.getElementById("state4");
+let state1 = document.getElementById("empty");
+let state2 = document.getElementById("start");
+let state3 = document.getElementById("finish");
+let state4 = document.getElementById("wall");
 
 state1.onclick = changeState;
 state2.onclick = changeState;
