@@ -231,6 +231,9 @@ function handleUniqueStates(element) {
             }
             break;
         }
+        default: {
+            break;
+        }
     }
 
     /*
@@ -322,7 +325,6 @@ function generateField(n) {
 
     for (let i = 0; i < n; i++) {
         let board_row = document.createElement("tr");            //Создаем строку.
-
         for (let j = 0; j < n; j++) {
             let board_elem = document.createElement('td');       //Создаем элемент стороки.
 
@@ -332,7 +334,7 @@ function generateField(n) {
             board_elem.onmousedown = doMouseOverTrue;
             board_elem.onmousemove = boardElementOverHandler;        //Обработчик нажатия на элемент.
 
-            board_elem.style.fontSize = 300 / n + "px";
+            board_elem.style.fontSize = 16.5/n + "vw";
             
             let f = document.createElement('div');
             f.innerText = 2;
@@ -481,10 +483,10 @@ function changeState() {
 }
 
 //Кнопки выбора состояния.
-let state1 = document.getElementById("state1");
-let state2 = document.getElementById("state2");
-let state3 = document.getElementById("state3");
-let state4 = document.getElementById("state4");
+let state1 = document.getElementById("empty");
+let state2 = document.getElementById("start");
+let state3 = document.getElementById("finish");
+let state4 = document.getElementById("wall");
 
 state1.onclick = changeState;
 state2.onclick = changeState;
@@ -492,6 +494,7 @@ state3.onclick = changeState;
 state4.onclick = changeState;
 
 
+// Кнопки движения по диагонали и среза углов
 let diagonal = document.getElementById('diagonal');
 let additSettings = document.getElementById('additSettings');
 
@@ -499,7 +502,7 @@ diagonal.onclick = () => {
     additSettings.hidden = !additSettings.hidden;
 }
 
-// Можно ввести максимум 3 цифры в размер поля
+// Можно ввести максимум 2 цифры в размер поля
 let sizeInput = document.getElementById('size');
 sizeInput.oninput = function() {
     this.value = this.value.slice(0, this.maxLength);
