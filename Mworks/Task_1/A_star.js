@@ -219,16 +219,11 @@ function handleUniqueStates(element) {
         case "start":
         case "finish": {
             if (uniqueStates.get(currentState).isDefined) {               //Если на доске уже есть start(finish).
-                if (uniqueStates.get(currentState).element == element) {    //Если мы нажимаем на этот самый start(finish).
-                    uniqueStates.get(currentState).isDefined = false;     //Тогда больше на доске нет start(finish). (т.к. повторное нажатие делает клетку empty) 
-                    uniqueStates.get(currentState).element = false;
-                    removeBoardState(currentState);
-                }
-                else {                                                                                       //Если это другая клетка.
+                if (uniqueStates.get(currentState).element != element) {    //Если это другая клетка.
                     uniqueStates.get(currentState).element.style.backgroundColor = stateColors.get("empty");  //Делаем старую empty.
                     uniqueStates.get(currentState).element.name = "empty";
                     uniqueStates.get(currentState).element = element;                                         //Записываем текущую клетку в качестве start(finish).
-                }
+                }                                                                                        
             }
             else {                                                       //Если еще нет start(finish).
                 uniqueStates.get(currentState).isDefined = true;          //Записываем текущую клетку в качестве start(finish).
@@ -296,14 +291,14 @@ function boardElementOverHandler() {
 
     console.log(`Cell pressed. Coord: ${this.parentElement.rowIndex} ${this.cellIndex}`);
 
-    if (this.name == currentState) {                                //Если текщее состояние совпадает с состоянием клетки.
+    /*if (this.name == currentState) {                                //Если текщее состояние совпадает с состоянием клетки.
         this.name = "empty";                                      //Делаем ее empty. (своего рода отмена).
         this.style.backgroundColor = stateColors.get("empty");
     }
-    else {                                                       //Иначе изменим состояние текущей клетки.
+    else {   */                                                    //Иначе изменим состояние текущей клетки.
         this.name = currentState;
         this.style.backgroundColor = stateColors.get(currentState);
-    }
+    //}
 
     setStateCoordinates(this);
 
