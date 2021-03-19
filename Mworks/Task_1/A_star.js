@@ -330,7 +330,7 @@ function generateField(n) {
             board_elem.name = "empty";
             board_elem.id = i * n + j;
             board_elem.onmousedown = doMouseOverTrue;
-            board_elem.onmouseover = boardElementOverHandler;        //Обработчик нажатия на элемент.
+            board_elem.onmousemove = boardElementOverHandler;        //Обработчик нажатия на элемент.
 
             board_elem.style.fontSize = 300 / n + "px";
             
@@ -418,7 +418,7 @@ function calculateHeuristic(currentPoint) {
 async function calculateAllHueristics() {
     for (let i = 0; i < currBoard.m; i++) {
         for (let j = 0; j < currBoard.n; j++) {
-            await sleep(500);
+            await sleep(100);
             let hue=document.getElementById(`h${board_block.rows[i].cells[j].id}`);
             hue.innerText = calculateHeuristic(new Point(i, j));
         }
