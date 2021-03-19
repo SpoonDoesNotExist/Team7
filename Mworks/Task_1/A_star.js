@@ -276,10 +276,20 @@ function setStateCoordinates(element) {
     }
 }
 
-//Обработчик нажатий на элементы доски.
-function boardElementClickHandler() {
+let wereMousedown = false;
 
-    console.log(`BoardElementClickHandler. Processing element ${this.id}`);
+function doMouseOverFalse(){
+    wereMousedown = false;
+}
+
+function doMouseOverTrue(){
+    wereMousedown = true;
+}
+
+//Обработчик нажатий на элементы доски.
+function boardElementOverHandler() {
+    if(!wereMousedown) return; 
+    console.log(`BoardElementOverHandler. Processing element ${this.id}`);
 
     //Проверяем уникальность start(finish).
     handleUniqueStates(this);
@@ -306,6 +316,8 @@ function boardElementClickHandler() {
 //Доска, на которой находятся элементы. (является table).
 const board_block = document.getElementById("board_block")
 
+document.body.onmouseup = doMouseOverFalse;
+
 //Создает доску нужного размера.
 function generateField(n) {
     board_block.innerHTML = "";
@@ -322,7 +334,8 @@ function generateField(n) {
             board_elem.className = "board_elem";
             board_elem.name = "empty";
             board_elem.id = i * n + j;
-            board_elem.onclick = boardElementClickHandler;        //Обработчик нажатия на элемент.
+            board_elem.onmousedown = doMouseOverTrue;
+            board_elem.onmouseover = boardElementOverHandler;        //Обработчик нажатия на элемент.
 
             board_elem.style.fontSize = 300 / n + "px";
             
