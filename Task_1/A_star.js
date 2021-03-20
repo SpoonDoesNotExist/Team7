@@ -309,8 +309,6 @@ function boardElementOverHandler() {
     console.log(`BoardElementClickHandler has been processed`);
 }
 
-
-
 //Доска, на которой находятся элементы. (является table).
 const board_block = document.getElementById("board_block")
 
@@ -331,13 +329,18 @@ function generateField(n) {
             board_elem.className = "board_elem";
             board_elem.name = "empty";
             board_elem.id = i * n + j;
-            board_elem.onmousedown = () =>{
+            board_elem.onmousedown = function() {
+                this.name = currentState;
+                this.style.backgroundColor = stateColors.get(currentState);
                 doMouseOverTrue();
-                boardElementOverHandler();
-            }
+            };
             board_elem.onmousemove = boardElementOverHandler;        //Обработчик нажатия на элемент.
 
-            board_elem.style.fontSize = 16.5/n + "vw";
+            if (n < 20) {
+                board_elem.style.fontSize = 16.5/n + "vw";
+            } else {
+                board_elem.style.fontSize = 16.5/20 + "vw";
+            }
             
             let f = document.createElement('div');
             f.innerText = 2;
@@ -480,7 +483,19 @@ button.onclick = () => {
 
 //Изменяет текущее состояние.
 function changeState() {
+
+    // Кликабельность кнопок состояния ------------------------------------------------ИЗМЕНЕНИЕ!!!!!!!!!!!!!!!
+    for (let stateButton of states) {
+        stateButton = document.getElementById(`${stateButton}`);
+
+        if (currentState == stateButton.name) {
+            stateButton.className = `state ${stateButton.name}`;
+            break;
+        }
+    }
+
     currentState = this.name;
+    this.className += " activatedState";
 
     console.log(`Current state: ${currentState}`);
 }

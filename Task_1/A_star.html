@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>experiments</title>
+    <title>A* Algorithm</title>
     <link rel="stylesheet" href="A_star.css">
 </head>
 
@@ -14,7 +14,7 @@
             <div id="miniTitle">Алгоритм А<span id="star">*</span></div>
             <div id = "block1">
                 <label for="size" id="forSize">Размер поля:</label>
-                    <input type="number" maxlength="2" id="size" value="5" min="1" max="99"><br>
+                    <input type="number" maxlength="2" id="size" min="1" max="99"><br>
                 <button id="size_button">Применить</button> 
             </div>
             <div id="startShell">
@@ -25,12 +25,12 @@
             <div id="forStates">Выбрать задаваемое состояние:</div>
             <div id="allStates">
                 <div id="upperRowBut">
-                    <button id="start" name="start" class="state">Start</button>
-                    <button id="finish" name="finish" class="state">Stop</button>
+                    <button id="start" name="start" class="state start">Start</button>
+                    <button id="finish" name="finish" class="state finish">Stop</button>
                 </div>
                 <div id="lowerRowBut">
-                    <button id="empty" name="empty" class="state">Empty</button>
-                    <button id="wall" name="wall" class="state">Wall</button>
+                    <button id="empty" name="empty" class="state empty">Empty</button>
+                    <button id="wall" name="wall" class="state wall">Wall</button>
                 </div>
             </div>
         </div>
@@ -41,9 +41,7 @@
     </div>
 
     <aside id="rightPanel">
-        <div id="backBlock">
-            <a href="../index.html" id="backButton">На главную</a>
-        </div>
+        <a href="../index.html" title="Перейти на главную" id="backButton">На главную</a>
         <div hidden>
             <label for="diagonal">Движение по диагонали</label>
                 <input type="checkbox" id="diagonal"><br>
@@ -64,11 +62,11 @@
                 <div class="g">G</div>
             </div>
             <div id="explanation">
-                G - расстояние от стартовой ячейки до текущей по найденному пути<br>
-                H - примерное расстояние до конечной ячейки<br>
-                F = G+H<br>
-                F влияет на порядок добавления в очередь<br>
-                <a id = "exLink" href="http://masters.donntu.org/2013/fknt/buga/library/AStar.htm">Подробности</a>
+                <span class="param">G</span> - расстояние от стартовой ячейки до текущей по найденному пути<br>
+                <span class="param">H</span> - примерное расстояние до конечной ячейки<br>
+                <span class="param">F</span> = <span class="param">G</span>+<span class="param">H</span><br>
+                <span class="param">F</span> влияет на порядок добавления в очередь<br>
+                <a id = "exLink" title="Перейти по ссылке" target="_blank" href="http://masters.donntu.org/2013/fknt/buga/library/AStar.htm">Подробности...</a>
             </div>
         </div>
     </aside>
