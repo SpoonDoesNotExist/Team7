@@ -327,7 +327,11 @@ function generateField(n) {
             board_elem.onclick = boardElementClickHandler;        //Обработчик нажатия на элемент.
 
             board_elem.style.fontSize = 16.5/n + "vw";
+            // board_row.style.minHeight = `calc(${1/n}% + 10px)`;
+            // board_elem.style.minWidth = `calc(${1/n}% + 10px)`;
             
+
+
             let f = document.createElement('div');
             f.innerText = 2;
             f.className = "f";

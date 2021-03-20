@@ -18,6 +18,7 @@ body {
 }
 
 /*--------------------------- Левая панель ------------------------------------*/
+
 #leftPanel {
     border-right: solid 4px #EEEEEE;
     /* float: left; */
@@ -143,6 +144,7 @@ body {
     outline: none;
     width: 100%;
     height: 100%;
+    transition: .3s;
 }
 
 #start_alg:hover {
@@ -179,7 +181,7 @@ body {
 #forStates {
     text-align: center;
     color: #EEEEEE;
-    font-size: 1.2vw;
+    font-size: 1.3vw;
 }
 
 #allStates {
@@ -217,8 +219,8 @@ body {
     padding: 1em 0.3em;
     outline: none;
     cursor: pointer;
-    transition: .3s;
     margin: 2%;
+    transition: .3s;
     text-align: center;
 }
 
@@ -330,6 +332,7 @@ body {
     text-decoration: none;
     color: #FF2E63;
     cursor: pointer;
+    transition: .3s;
 }
 
 #backButton:hover {
@@ -349,8 +352,8 @@ body {
 /*--------------------------- Конец правой панели ------------------------------*/
 
 #forTable {
-    width: 49%;
-    max-width: 49%;
+    width:48.8024%;
+    max-width: 48.8024%;
     height: 100vh;
     max-height: 100vh;
     /* position: absolute;
@@ -358,8 +361,8 @@ body {
     right: 25.5%; */
     padding: 0;
     overflow: auto;
-    margin-left: auto;
-    margin-right: auto;
+    /* margin-left: auto;
+    margin-right: auto; */
 }
 
 #forTable::-webkit-scrollbar-thumb, #forTable::-webkit-scrollbar-corner {
@@ -382,23 +385,28 @@ body {
     background-color: crimson;
     margin: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
 }
 
-.board_elem, td, #board_block {
+.board_elem, #board_block {
     margin: 0;
     padding: 0;
     border: 1px solid #EEEEEE;
     background-color: #5f9ea0;
 }
 
+/* tr {
+    min-height: 20px;
+    height: 20px;
+} */
+
 .board_elem {
     position: relative;
+    cursor: pointer;
     min-width: 20px;
     min-height: 20px;
     width: 20px;
     height: 20px;
-    cursor: pointer;
 }
 
 .board_elem:hover {
