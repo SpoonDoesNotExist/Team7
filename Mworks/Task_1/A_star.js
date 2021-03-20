@@ -166,8 +166,8 @@ let states = ["empty", "start", "finish", "wall"];
 
 //Цвета для состояний.
 let stateColors = new Map();
-stateColors.set("empty", "#5f9ea0");
-stateColors.set("start", "#bc7837");
+stateColors.set("empty", "#a49582");
+stateColors.set("start", "#042f28");
 stateColors.set("finish", "#3f0d16");
 stateColors.set("wall", "#2d2f28");
 
@@ -298,7 +298,7 @@ function boardElementOverHandler() {
         this.name = "empty";                                      //Делаем ее empty. (своего рода отмена).
         this.style.backgroundColor = stateColors.get("empty");
     }
-    else {   */                                                    //Иначе изменим состояние текущей клетки.
+    else { */                                                    //Иначе изменим состояние текущей клетки.
         this.name = currentState;
         this.style.backgroundColor = stateColors.get(currentState);
     //}
@@ -331,7 +331,10 @@ function generateField(n) {
             board_elem.className = "board_elem";
             board_elem.name = "empty";
             board_elem.id = i * n + j;
-            board_elem.onmousedown = doMouseOverTrue;
+            board_elem.onmousedown = () =>{
+                doMouseOverTrue();
+                boardElementOverHandler();
+            }
             board_elem.onmousemove = boardElementOverHandler;        //Обработчик нажатия на элемент.
 
             board_elem.style.fontSize = 16.5/n + "vw";

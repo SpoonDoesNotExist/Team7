@@ -14,7 +14,7 @@
             <div id="miniTitle">Алгоритм А<span id="star">*</span></div>
             <div id = "block1">
                 <label for="size" id="forSize">Размер поля:</label>
-                    <input type="number" maxlength="2" id="size" placeholder="0_o" min="1" max="99"><br>
+                    <input type="number" maxlength="2" id="size" value="5" min="1" max="99"><br>
                 <button id="size_button">Применить</button> 
             </div>
             <div id="startShell">
@@ -57,7 +57,22 @@
                 </li>
             </ul>
         </div>
+        <div id="forExample">
+            <div id="example">
+                <div class="f">F</div>
+                <div class="h">H</div>
+                <div class="g">G</div>
+            </div>
+            <div id="explanation">
+                G - расстояние от стартовой ячейки до текущей по найденному пути<br>
+                H - примерное расстояние до конечной ячейки<br>
+                F = G+H<br>
+                F влияет на порядок добавления в очередь<br>
+                <a id = "exLink" href="http://masters.donntu.org/2013/fknt/buga/library/AStar.htm">Подробности</a>
+            </div>
+        </div>
     </aside>
+
     <script src="A_star.js"></script>
 </body>
 </html>

@@ -207,13 +207,13 @@ body {
 
 .state {
     min-width: 35px;
-    width: 125px;
-    height: 125px;
+    width: 90px;
+    height: 90px;
     min-height: 35px;
     padding: .4em .7em;
     font-weight: bold;
     font-size: 1.4vw;
-    border-radius: 10px;
+    border-radius: 0px;
     padding: 1em 0.3em;
     outline: none;
     cursor: pointer;
@@ -230,8 +230,8 @@ body {
 
 #empty {
     color: #393E46;
-    background-color: #5f9ea0;
-    border: 2px solid #5f9ea0;
+    background-color: #a49582;
+    border: 2px solid #EEEEEE;
 }
 
 #empty:hover {
@@ -246,9 +246,9 @@ body {
 }
 
 #start {
-    color: #393E46;
-    background-color: #bc7837;
-    border: 2px solid #bc7837;
+    color: #8a8a8a;
+    background-color: #042f28;
+    border: 2px solid #EEEEEE;
 }
 
 #start:hover {
@@ -263,9 +263,9 @@ body {
 }
 
 #finish {
-    color: #393E46;
+    color: #8a8a8a;
     background-color: #3f0d16;
-    border: 2px solid #3f0d16;
+    border: 2px solid #EEEEEE;
 }
 
 #finish:hover {
@@ -280,9 +280,9 @@ body {
 }
 
 #wall {
-    color: #393E46;
+    color: #8a8a8a;
     background-color: #2d2f28;
-    border: 2px solid #2d2f28;
+    border: 2px solid #EEEEEE;
     align-self: flex-end;
 }
 
@@ -328,22 +328,56 @@ body {
     border: 2px solid #EEEEEE;
     outline: none;
     text-decoration: none;
-    color: #FF2E63;
+    color: #00ADB5;
     cursor: pointer;
 }
 
 #backButton:hover {
-    background-color: #FF2E63;
-    border: 3px solid #FF2E63;
+    background-color: #00ADB5;
+    border: 3px solid #00ADB5;
     color: #EEEEEE;
-    box-shadow: 0 0 0px 1px #FF2E63;
+    box-shadow: 0 0 0px 1px #00ADB5;
     animation: anim-shadow4 .3s forwards;
 }
 
 @keyframes anim-shadow4 {
     100% {
-        box-shadow: 0 0 50px 20px #FF2E63;
+        box-shadow: 0 0 25px 5px #00ADB5;
     }
+}
+
+#forExample {
+    width: 90%;
+    border: #393E46 solid 2px;
+    background-color: #393E46;
+    border-radius: 15px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-shrink: 1;
+    flex-direction: column;
+    align-items: center;
+}
+
+#example{
+    margin: 0;
+    padding: 0;
+    border: 1px solid #EEEEEE;
+    background-color: #a49582;
+    position: relative;
+    width: 100px;
+    height: 100px;
+    min-width: 35px;
+    min-height: 35px;
+    font-size: 3em;
+}
+
+#explanation{
+    color: #EEEEEE;
+}
+
+#exLink{
+    text-decoration: none;
+    color:aqua;
 }
 
 /*--------------------------- Конец правой панели ------------------------------*/
@@ -389,7 +423,7 @@ body {
     margin: 0;
     padding: 0;
     border: 1px solid #EEEEEE;
-    background-color: #5f9ea0;
+    background-color: #a49582;
 }
 
 .board_elem {
