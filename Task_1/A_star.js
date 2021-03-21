@@ -714,19 +714,11 @@ function boardElementOverHandler() {
 
     console.log(`Cell pressed. Coord: ${this.parentElement.rowIndex} ${this.cellIndex}`);
 
-<<<<<<< HEAD
-    if (this.name == currentState) {                              //Если текщее состояние совпадает с состоянием клетки.
-        this.name = "empty";                                      //Делаем ее empty. (своего рода отмена).
-        this.style.backgroundColor = stateColors.get("empty");
-    }
-    else {                                                        //Иначе изменим состояние текущей клетки.
-=======
     /*if (this.name == currentState) {                                //Если текщее состояние совпадает с состоянием клетки.
         this.name = "empty";                                      //Делаем ее empty. (своего рода отмена).
         this.style.backgroundColor = stateColors.get("empty");
     }
     else { */                                                    //Иначе изменим состояние текущей клетки.
->>>>>>> origin/ArmenAndMynka
         this.name = currentState;
         this.style.backgroundColor = stateColors.get(currentState);
     //}
@@ -756,13 +748,6 @@ function generateField(n) {
 
             board_elem.className = "board_elem";
             board_elem.name = "empty";
-<<<<<<< HEAD
-            board_elem.id = `${i}-${j}`;
-            board_elem.onclick = boardElementClickHandler;        //Об``работчик нажатия на элемент.
-
-            board_elem.style.fontSize = 300 / n + "px";
-
-=======
             board_elem.id = i * n + j;
             board_elem.onmousedown = function() {
                 this.name = currentState;
@@ -777,7 +762,6 @@ function generateField(n) {
                 board_elem.style.fontSize = 16.5/20 + "vw";
             }
             
->>>>>>> origin/ArmenAndMynka
             let f = document.createElement('div');
             //f.innerText = 2;
             f.className = "f";
@@ -856,7 +840,6 @@ function calculateHeuristic(currentPoint) {
 function calculateAllHueristics() {
     for (let i = 0; i < currBoard.m; i++) {
         for (let j = 0; j < currBoard.n; j++) {
-<<<<<<< HEAD
             //await sleep(500);
             let hue = document.getElementById(`h${board_block.rows[i].cells[j].id}`);
 
@@ -865,11 +848,6 @@ function calculateAllHueristics() {
                 hue.innerText = heu;
                 currBoard.board_matrix[i][j].H = heu;
             }
-=======
-            await sleep(100);
-            let hue=document.getElementById(`h${board_block.rows[i].cells[j].id}`);
-            hue.innerText = calculateHeuristic(new Point(i, j));
->>>>>>> origin/ArmenAndMynka
         }
     }
 }

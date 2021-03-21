@@ -31,6 +31,8 @@ class Board {
         this.size_m = m;
         this.size_n = n;
 
+        this.cutCorners = false;
+
         this.startID = null
         this.finishID = null
 
@@ -215,7 +217,7 @@ function generateField(n) {
                 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 boardElementClickHandler(this);
                 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                
+
             };
             board_elem.onmousemove = function () {
                 boardElementClickHandler(this);
@@ -283,7 +285,7 @@ size_button.onclick = () => {
 }
 
 
-function DrawPath(clearPath=false) {
+function DrawPath(clearPath = false) {
     let e = board.matrix[board.finishCell.coord.i][board.finishCell.coord.j];
     e = board.matrix[e.parent.i][e.parent.j];
 
@@ -296,8 +298,8 @@ function DrawPath(clearPath=false) {
         fieldElem = document.getElementById(`${e.coord.i}-${e.coord.j}`)
 
 
-        if(clearPath)
-            fieldElem.style.backgroundColor=stateColorsMap("empty");
+        if (clearPath)
+            fieldElem.style.backgroundColor = stateColorsMap("empty");
         else
             fieldElem.style.backgroundColor = "#FFFFFF";
 
@@ -325,20 +327,48 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function A_STAR_ALGORITHM() {
 
-    ortoghonal_checks = [
-        [1, 0],
-        [0, 1],
-        [-1, 0],
-        [0, -1],
-    ];
-    diagonal_checks = [
-        [1, 1],
-        [-1, 1],
-        [-1, -1],
-        [1, -1]
-    ];
+let ortoghonal_checks = [
+    [1, 0],
+    [0, 1],
+    [-1, 0],
+    [0, -1],
+];
+let diagonal_checks = [
+    [1, 1],
+    [-1, 1],
+    [-1, -1],
+    [1, -1]
+];
+let checks = [[diagonal_checks, diagonalWeight], [ortoghonal_checks, ortoghonalWeight]];
+
+
+let cut_corner_checks = new Map();
+cut_corner_checks.set(`${1}:${1}`, [[0, -1], [-1, 0]]);
+cut_corner_checks.set(`${1}:${-1}`, [[0, 1], [-1, 0]]);
+cut_corner_checks.set(`${-1}:${-1}`, [[0, 1], [1, 0]]);
+cut_corner_checks.set(`${-1}:${1}`, [[0, -1], [1, 0]]);
+
+
+function cutCornerCheck(i, j,ci,cj) {
+
+    console.log(`CUT CORNER CHECK: ${i} ${j}`);
+
+    if (board.cutCorners) {
+        return true;
+    }
+    else {
+        if (cut_corner_checks.has(`${ci}:${cj}`)) {
+            let check = cut_corner_checks.get(`${ci}:${cj}`);
+
+            return !board.wallSet.has(`${i + check[0][0]}-${j + check[0][1]}`) && !board.wallSet.has(`${i + check[1][0]}-${j + check[1][1]}`)
+        }
+        return true;
+    }
+}
+
+
+function A_STAR_ALGORITHM() {
 
     let openList = new Map();
     let closeList = new Set();
@@ -394,60 +424,15 @@ function A_STAR_ALGORITHM() {
 
         closeList.add(`${i}-${j}`);
 
-        for (let c in ortoghonal_checks) {
-            c = ortoghonal_checks[c];
+        for (let c in checks) {
+            let curr_checks = checks[c][0];
+            let weight = checks[c][1];
 
-            if (allowed(i + c[0], j + c[1])) {
-                if (!board.wallSet.has(`${i + c[0]}-${j + c[1]}`) && !closeList.has(`${i + c[0]}-${j + c[1]}`)) {
 
-                    //console.log(`CHECKING ALLOWED ${c}`);
+            for (let c in curr_checks) {
+                c = curr_checks[c];
 
-                    if (openList.has(`${i + c[0]}-${j + c[1]}`)) {
-                        let e = openList.get(`${i + c[0]}-${j + c[1]}`);
-
-                        if (board.matrix[i][j].G + ortoghonalWeight < e.G) {
-                            board.matrix[i + c[0]][j + c[1]].G = +board.matrix[i][j].G + ortoghonalWeight;
-                            board.matrix[i + c[0]][j + c[1]].F = +board.matrix[i + c[0]][j + c[1]].G + board.matrix[i + c[0]][j + c[1]].H;
-
-                            board.matrix[i + c[0]][j + c[1]].parent = board.matrix[i][j].coord;
-
-                            openList.set(`${i + c[0]}-${j + c[1]}`, board.matrix[i + c[0]][j + c[1]]);
-                        }
-                    }
-                    else {
-
-                        console.log("C is///")
-                        console.log(...c);
-                        console.log(`board_matrix.G`);
-
-                        board.matrix[i + c[0]][j + c[1]].H = calculateHeuristic(board.matrix[i + c[0]][j + c[1]].coord, board.finishCell.coord);
-                        board.matrix[i + c[0]][j + c[1]].G = Number(board.matrix[i][j].G) + Number(ortoghonalWeight);
-                        board.matrix[i + c[0]][j + c[1]].F = Number(board.matrix[i + c[0]][j + c[1]].G) + board.matrix[i + c[0]][j + c[1]].H;
-
-                        board.matrix[i + c[0]][j + c[1]].parent = board.matrix[i][j].coord;
-
-                        openList.set(`${i + c[0]}-${j + c[1]}`, board.matrix[i + c[0]][j + c[1]]);
-
-                        console.log(`OPEN LIST HAS `)
-                        console.log(openList.get(`${i + c[0]}-${j + c[1]}`));
-                    }
-
-                    DrawBoardElem(board.matrix[i + c[0]][j + c[1]], board.matrix[i + c[0]][j + c[1]].coord);
-
-                    if (board.finishCell.coord.i == i + c[0] && board.finishCell.coord.j == j + c[1]) {
-                        console.log("DRAWING PATH")
-                        DrawPath();
-                        return;
-                    }
-                }
-            }
-
-            /////////////////////////////////////////
-
-            for (let c in diagonal_checks) {
-                c = diagonal_checks[c];
-
-                if (allowed(i + c[0], j + c[1])) {
+                if (allowed(i + c[0], j + c[1])&& cutCornerCheck(i + c[0], j + c[1],c[0],c[1])) {
                     if (!board.wallSet.has(`${i + c[0]}-${j + c[1]}`) && !closeList.has(`${i + c[0]}-${j + c[1]}`)) {
 
                         //console.log(`CHECKING ALLOWED ${c}`);
@@ -455,8 +440,8 @@ function A_STAR_ALGORITHM() {
                         if (openList.has(`${i + c[0]}-${j + c[1]}`)) {
                             let e = openList.get(`${i + c[0]}-${j + c[1]}`);
 
-                            if (board.matrix[i][j].G + diagonalWeight < e.G) {
-                                board.matrix[i + c[0]][j + c[1]].G = +board.matrix[i][j].G + diagonalWeight;
+                            if (board.matrix[i][j].G + weight < e.G) {
+                                board.matrix[i + c[0]][j + c[1]].G = +board.matrix[i][j].G + weight;
                                 board.matrix[i + c[0]][j + c[1]].F = +board.matrix[i + c[0]][j + c[1]].G + board.matrix[i + c[0]][j + c[1]].H;
 
                                 board.matrix[i + c[0]][j + c[1]].parent = board.matrix[i][j].coord;
@@ -471,7 +456,7 @@ function A_STAR_ALGORITHM() {
                             console.log(`board_matrix.G`);
 
                             board.matrix[i + c[0]][j + c[1]].H = calculateHeuristic(board.matrix[i + c[0]][j + c[1]].coord, board.finishCell.coord);
-                            board.matrix[i + c[0]][j + c[1]].G = Number(board.matrix[i][j].G) + Number(diagonalWeight);
+                            board.matrix[i + c[0]][j + c[1]].G = Number(board.matrix[i][j].G) + Number(weight);
                             board.matrix[i + c[0]][j + c[1]].F = Number(board.matrix[i + c[0]][j + c[1]].G) + board.matrix[i + c[0]][j + c[1]].H;
 
                             board.matrix[i + c[0]][j + c[1]].parent = board.matrix[i][j].coord;
@@ -491,7 +476,60 @@ function A_STAR_ALGORITHM() {
                         }
                     }
                 }
+
             }
+
+
+            /////////////////////////////////////////
+            /*
+                        for (let c in diagonal_checks) {
+                            c = diagonal_checks[c];
+            
+                            if (allowed(i + c[0], j + c[1])) {
+                                if (!board.wallSet.has(`${i + c[0]}-${j + c[1]}`) && !closeList.has(`${i + c[0]}-${j + c[1]}`)) {
+            
+                                    //console.log(`CHECKING ALLOWED ${c}`);
+            
+                                    if (openList.has(`${i + c[0]}-${j + c[1]}`)) {
+                                        let e = openList.get(`${i + c[0]}-${j + c[1]}`);
+            
+                                        if (board.matrix[i][j].G + diagonalWeight < e.G) {
+                                            board.matrix[i + c[0]][j + c[1]].G = +board.matrix[i][j].G + diagonalWeight;
+                                            board.matrix[i + c[0]][j + c[1]].F = +board.matrix[i + c[0]][j + c[1]].G + board.matrix[i + c[0]][j + c[1]].H;
+            
+                                            board.matrix[i + c[0]][j + c[1]].parent = board.matrix[i][j].coord;
+            
+                                            openList.set(`${i + c[0]}-${j + c[1]}`, board.matrix[i + c[0]][j + c[1]]);
+                                        }
+                                    }
+                                    else {
+            
+                                        console.log("C is///")
+                                        console.log(...c);
+                                        console.log(`board_matrix.G`);
+            
+                                        board.matrix[i + c[0]][j + c[1]].H = calculateHeuristic(board.matrix[i + c[0]][j + c[1]].coord, board.finishCell.coord);
+                                        board.matrix[i + c[0]][j + c[1]].G = Number(board.matrix[i][j].G) + Number(diagonalWeight);
+                                        board.matrix[i + c[0]][j + c[1]].F = Number(board.matrix[i + c[0]][j + c[1]].G) + board.matrix[i + c[0]][j + c[1]].H;
+            
+                                        board.matrix[i + c[0]][j + c[1]].parent = board.matrix[i][j].coord;
+            
+                                        openList.set(`${i + c[0]}-${j + c[1]}`, board.matrix[i + c[0]][j + c[1]]);
+            
+                                        console.log(`OPEN LIST HAS `)
+                                        console.log(openList.get(`${i + c[0]}-${j + c[1]}`));
+                                    }
+            
+                                    DrawBoardElem(board.matrix[i + c[0]][j + c[1]], board.matrix[i + c[0]][j + c[1]].coord);
+            
+                                    if (board.finishCell.coord.i == i + c[0] && board.finishCell.coord.j == j + c[1]) {
+                                        console.log("DRAWING PATH")
+                                        DrawPath();
+                                        return;
+                                    }
+                                }
+                            }
+                        }*/
         }
 
     }
@@ -519,7 +557,7 @@ startAlgorithmButton.onclick = async function () {
         if (startAndFinishAreDefined()) {///Если на доске есть начало и конец/
 
             //if(board.matrix[board.finishCell.coord.i][board.finishCell.coord.i].parent.i!=-1)
-              //  DrawPath(clearPath=true);
+            //  DrawPath(clearPath=true);
 
             A_STAR_ALGORITHM();
             alert("BCE")
