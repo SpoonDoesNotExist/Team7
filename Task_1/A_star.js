@@ -561,8 +561,8 @@ let states = ["empty", "start", "finish", "wall"];
 
 //Цвета для состояний.
 let stateColors = new Map();
-stateColors.set("empty", "#5f9ea0");
-stateColors.set("start", "#bc7837");
+stateColors.set("empty", "#a49582");
+stateColors.set("start", "#042f28");
 stateColors.set("finish", "#3f0d16");
 stateColors.set("wall", "#2d2f28");
 
@@ -614,21 +614,19 @@ function handleUniqueStates(element) {
         case "start":
         case "finish": {
             if (uniqueStates.get(currentState).isDefined) {               //Если на доске уже есть start(finish).
-                if (uniqueStates.get(currentState).element == element) {    //Если мы нажимаем на этот самый start(finish).
-                    uniqueStates.get(currentState).isDefined = false;     //Тогда больше на доске нет start(finish). (т.к. повторное нажатие делает клетку empty) 
-                    uniqueStates.get(currentState).element = false;
-                    removeBoardState(currentState);
-                }
-                else {                                                                                       //Если это другая клетка.
+                if (uniqueStates.get(currentState).element != element) {    //Если это другая клетка.
                     uniqueStates.get(currentState).element.style.backgroundColor = stateColors.get("empty");  //Делаем старую empty.
                     uniqueStates.get(currentState).element.name = "empty";
                     uniqueStates.get(currentState).element = element;                                         //Записываем текущую клетку в качестве start(finish).
-                }
+                }                                                                                        
             }
             else {                                                       //Если еще нет start(finish).
                 uniqueStates.get(currentState).isDefined = true;          //Записываем текущую клетку в качестве start(finish).
                 uniqueStates.get(currentState).element = element;
             }
+            break;
+        }
+        default: {
             break;
         }
     }
@@ -673,6 +671,7 @@ function setStateCoordinates(element) {
     }
 }
 
+<<<<<<< HEAD
 
 let wallSet = new Set();
 
@@ -691,8 +690,22 @@ function checkWallSet(element) {
 
 //Обработчик нажатий на элементы доски.
 function boardElementClickHandler() {
+=======
+let wereMousedown = false;
 
-    console.log(`BoardElementClickHandler. Processing element ${this.id}`);
+function doMouseOverFalse(){
+    wereMousedown = false;
+}
+
+function doMouseOverTrue(){
+    wereMousedown = true;
+}
+>>>>>>> origin/ArmenAndMynka
+
+//Обработчик нажатий на элементы доски.
+function boardElementOverHandler() {
+    if(!wereMousedown) return; 
+    console.log(`BoardElementOverHandler. Processing element ${this.id}`);
 
     //Проверяем уникальность start(finish).
     handleUniqueStates(this);
@@ -701,14 +714,22 @@ function boardElementClickHandler() {
 
     console.log(`Cell pressed. Coord: ${this.parentElement.rowIndex} ${this.cellIndex}`);
 
+<<<<<<< HEAD
     if (this.name == currentState) {                              //Если текщее состояние совпадает с состоянием клетки.
         this.name = "empty";                                      //Делаем ее empty. (своего рода отмена).
         this.style.backgroundColor = stateColors.get("empty");
     }
     else {                                                        //Иначе изменим состояние текущей клетки.
+=======
+    /*if (this.name == currentState) {                                //Если текщее состояние совпадает с состоянием клетки.
+        this.name = "empty";                                      //Делаем ее empty. (своего рода отмена).
+        this.style.backgroundColor = stateColors.get("empty");
+    }
+    else { */                                                    //Иначе изменим состояние текущей клетки.
+>>>>>>> origin/ArmenAndMynka
         this.name = currentState;
         this.style.backgroundColor = stateColors.get(currentState);
-    }
+    //}
 
     setStateCoordinates(this);
 
@@ -716,10 +737,10 @@ function boardElementClickHandler() {
     console.log(`BoardElementClickHandler has been processed`);
 }
 
-
-
 //Доска, на которой находятся элементы. (является table).
 const board_block = document.getElementById("board_block")
+
+document.body.onmouseup = doMouseOverFalse;
 
 //Создает доску нужного размера.
 function generateField(n) {
@@ -730,17 +751,33 @@ function generateField(n) {
 
     for (let i = 0; i < n; i++) {
         let board_row = document.createElement("tr");            //Создаем строку.
-
         for (let j = 0; j < n; j++) {
             let board_elem = document.createElement('td');       //Создаем элемент стороки.
 
             board_elem.className = "board_elem";
             board_elem.name = "empty";
+<<<<<<< HEAD
             board_elem.id = `${i}-${j}`;
             board_elem.onclick = boardElementClickHandler;        //Об``работчик нажатия на элемент.
 
             board_elem.style.fontSize = 300 / n + "px";
 
+=======
+            board_elem.id = i * n + j;
+            board_elem.onmousedown = function() {
+                this.name = currentState;
+                this.style.backgroundColor = stateColors.get(currentState);
+                doMouseOverTrue();
+            };
+            board_elem.onmousemove = boardElementOverHandler;        //Обработчик нажатия на элемент.
+
+            if (n < 20) {
+                board_elem.style.fontSize = 16.5/n + "vw";
+            } else {
+                board_elem.style.fontSize = 16.5/20 + "vw";
+            }
+            
+>>>>>>> origin/ArmenAndMynka
             let f = document.createElement('div');
             //f.innerText = 2;
             f.className = "f";
@@ -819,6 +856,7 @@ function calculateHeuristic(currentPoint) {
 function calculateAllHueristics() {
     for (let i = 0; i < currBoard.m; i++) {
         for (let j = 0; j < currBoard.n; j++) {
+<<<<<<< HEAD
             //await sleep(500);
             let hue = document.getElementById(`h${board_block.rows[i].cells[j].id}`);
 
@@ -827,6 +865,11 @@ function calculateAllHueristics() {
                 hue.innerText = heu;
                 currBoard.board_matrix[i][j].H = heu;
             }
+=======
+            await sleep(100);
+            let hue=document.getElementById(`h${board_block.rows[i].cells[j].id}`);
+            hue.innerText = calculateHeuristic(new Point(i, j));
+>>>>>>> origin/ArmenAndMynka
         }
     }
 }
@@ -1229,7 +1272,19 @@ button.onclick = () => {
 
 //Изменяет текущее состояние.
 function changeState() {
+
+    // Кликабельность кнопок состояния ------------------------------------------------ИЗМЕНЕНИЕ!!!!!!!!!!!!!!!
+    for (let stateButton of states) {
+        stateButton = document.getElementById(`${stateButton}`);
+
+        if (currentState == stateButton.name) {
+            stateButton.className = `state ${stateButton.name}`;
+            break;
+        }
+    }
+
     currentState = this.name;
+    this.className += " activatedState";
 
     console.log(`Current state: ${currentState}`);
 }
@@ -1246,6 +1301,7 @@ state3.onclick = changeState;
 state4.onclick = changeState;
 
 
+// Кнопки движения по диагонали и среза углов
 let diagonal = document.getElementById('diagonal');
 let additSettings = document.getElementById('additSettings');
 
@@ -1253,7 +1309,7 @@ diagonal.onclick = () => {
     additSettings.hidden = !additSettings.hidden;
 }
 
-// Можно ввести максимум 3 цифры в размер поля
+// Можно ввести максимум 2 цифры в размер поля
 let sizeInput = document.getElementById('size');
 sizeInput.oninput = function () {
     this.value = this.value.slice(0, this.maxLength);

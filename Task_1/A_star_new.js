@@ -58,7 +58,7 @@ class Board {
 
 let board = null;
 
-function DrawBoardState(matrix_elem, coord){
+function DrawBoardState(matrix_elem, coord) {
     board.field.rows[coord.i].cells[coord.j].style.backgroundColor = stateColorsMap.get(matrix_elem.state)
 }
 
@@ -109,11 +109,28 @@ function removeOld(state) {
     }
 }
 
-function boardElementClickHandler() {
+
+
+
+let wereMousedown = false;
+
+function doMouseMoveFalse() {
+    wereMousedown = false;
+}
+
+function doMouseMoveTrue() {
+    wereMousedown = true;
+}
+
+
+function boardElementClickHandler(t) {
+
+    if (!wereMousedown)
+        return;
 
     console.log(`Board Elem Click Handler...`)
 
-    let id = this.id.split('-');
+    let id = t.id.split('-');
     let elementCoord = new Point(id[0], id[1]);
 
     let matrix_elem = board.matrix[elementCoord.i][elementCoord.j];
@@ -123,22 +140,22 @@ function boardElementClickHandler() {
 
     switch (board.current_state) {
         case 'start': {
-            board.startID = this.id;
+            board.startID = t.id;
             board.startCell = new Cell(elementCoord.i, elementCoord.j);
             break;
         }
         case 'finish':
-            board.finishID = this.id;
+            board.finishID = t.id;
             board.finishCell = new Cell(elementCoord.i, elementCoord.j);
             break;
         case 'wall':
-            board.wallSet.add(this.id);
+            board.wallSet.add(t.id);
             break;
         case 'empty':
             break
     }
 
-    console.log(this.state);
+    console.log(t.state);
 
     switch (board.matrix[elementCoord.i][elementCoord.j].state) {
         case 'start':
@@ -150,14 +167,14 @@ function boardElementClickHandler() {
             board.finishCell = null;
             break;
         case 'wall':
-            board.wallSet.delete(this.id);
+            board.wallSet.delete(t.id);
             break;
         case 'empty':
             break;
     }
 
     if (matrix_elem.state == board.current_state) {
-        matrix_elem.state = 'empty';
+        matrix_elem.state = "empty";
     }
     else {
         matrix_elem.state = board.current_state;
@@ -167,6 +184,8 @@ function boardElementClickHandler() {
     DrawBoardState(matrix_elem, elementCoord);
 }
 
+
+document.body.onmouseup = doMouseMoveFalse;
 
 //Создает доску нужного размера.
 function generateField(n) {
@@ -187,10 +206,20 @@ function generateField(n) {
             board_elem.className = "board_elem";
             board_elem.name = "empty";
             board_elem.id = `${i}-${j}`;
-            board_elem.onclick = boardElementClickHandler;        //Обработчик нажатия на элемент.
 
-            board_elem.style.fontSize = 300 / n + "px";
+            //board_elem.onclick = boardElementClickHandler;        //Обработчик нажатия на элемент.
+            //board_elem.style.fontSize = 300 / n + "px";
 
+            board_elem.onmousedown = function () {
+                doMouseMoveTrue();
+                //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                boardElementClickHandler(this);
+                //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                
+            };
+            board_elem.onmousemove = function () {
+                boardElementClickHandler(this);
+            }
 
             let f = document.createElement('div');
             f.className = "f";
@@ -254,7 +283,7 @@ size_button.onclick = () => {
 }
 
 
-function DrawPath() {
+function DrawPath(clearPath=false) {
     let e = board.matrix[board.finishCell.coord.i][board.finishCell.coord.j];
     e = board.matrix[e.parent.i][e.parent.j];
 
@@ -265,7 +294,13 @@ function DrawPath() {
         console.log(e);
 
         fieldElem = document.getElementById(`${e.coord.i}-${e.coord.j}`)
-        fieldElem.style.backgroundColor = "#FFFFFF";
+
+
+        if(clearPath)
+            fieldElem.style.backgroundColor=stateColorsMap("empty");
+        else
+            fieldElem.style.backgroundColor = "#FFFFFF";
+
 
         e = board.matrix[e.parent.i][e.parent.j];
     }
@@ -330,15 +365,15 @@ function A_STAR_ALGORITHM() {
         console.log(`OPEN LIST SIZE NOW  ${openList.size}`)
 
         /////////////////////////////////////////
-        let openListArray =[...openList.entries()];
+        let openListArray = [...openList.entries()];
         //const [initial] = openListArray;
 
-        currCell = openListArray.reduce((acc, curr) =>{
+        currCell = openListArray.reduce((acc, curr) => {
             console.log("<><><>><>><><><>")
             console.log(acc[1])
             console.log(curr[1])
             console.log("<><><>><>><><><>")
-            if(acc[1].F<curr[1].F)
+            if (acc[1].F < curr[1].F)
                 return acc;
             return curr;
         })[1];
@@ -482,6 +517,10 @@ function startAndFinishAreDefined() {
 startAlgorithmButton.onclick = async function () {
     if (board) {
         if (startAndFinishAreDefined()) {///Если на доске есть начало и конец/
+
+            //if(board.matrix[board.finishCell.coord.i][board.finishCell.coord.i].parent.i!=-1)
+              //  DrawPath(clearPath=true);
+
             A_STAR_ALGORITHM();
             alert("BCE")
         }
@@ -489,7 +528,7 @@ startAlgorithmButton.onclick = async function () {
 }
 
 
-let states=["empty","wall","start","finish"];
+let states = ["empty", "wall", "start", "finish"];
 
 /*
 //Изменяет текущее состояние.
@@ -501,7 +540,7 @@ function changeState() {
 
 //Изменяет текущее состояние.
 function changeState() {
-    
+
     for (let stateButton of states) {
         stateButton = document.getElementById(`${stateButton}`);
 
