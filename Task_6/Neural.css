@@ -1,0 +1,73 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #6a5d63;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    /* overflow: hidden; */
+}
+
+#leftPanel, #rightPanel {
+    max-height: 100vh;
+    height: 100vh;
+    width: 17%;
+    position: relative;
+    background-color: #cdb78a;
+}
+
+/*------------------Левая панель-----------------*/
+#leftPanel{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    border-right: 4px #8f5e3a solid;
+}
+
+#colorButtons{
+    background-color: #64423c;
+    width: 85%;
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3%;
+}
+
+.colorButton{
+
+}
+
+/*------------------Правая панель------------------*/
+#rightPanel{
+    display:flex;
+    flex-direction: column;
+    border-left: 4px #8f5e3a solid;
+}
+
+/*------------------Drawing Area-------------------*/
+
+#drawingArea{
+    border: 1px #000000 solid;
+    width: 500px;
+    height: 500px;
+    cursor: pointer;
+    font-size:0px;
+    margin-top: 20px;
+}
+
+.pixel{
+    display: inline-block;
+    padding: 0;
+    border: 0;
+    margin: 0;
+    
+}
+
+.white{
+    background-color: #ffffff;
+}
+.black{
+    background-color: black;
+}
