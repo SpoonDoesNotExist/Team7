@@ -604,3 +604,20 @@ state1.onclick = changeState;
 state2.onclick = changeState;
 state3.onclick = changeState;
 state4.onclick = changeState;
+
+// // Кнопки движения по диагонали и среза углов
+// let diagonal = document.getElementById('diagonal');
+// let additSettings = document.getElementById('additSettings');
+
+// diagonal.onclick = () => {
+//     additSettings.hidden = !additSettings.hidden;
+// }
+
+// Можно ввести максимум 2 цифры в размер поля
+let sizeInput = document.getElementById('size');
+sizeInput.oninput = function () {
+    this.value = this.value.slice(0, this.maxLength);
+    if (this.value == 0) {
+        this.value = "";
+    }
+}
