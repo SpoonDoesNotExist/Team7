@@ -478,58 +478,6 @@ function A_STAR_ALGORITHM() {
                 }
 
             }
-
-
-            /////////////////////////////////////////
-            /*
-                        for (let c in diagonal_checks) {
-                            c = diagonal_checks[c];
-            
-                            if (allowed(i + c[0], j + c[1])) {
-                                if (!board.wallSet.has(`${i + c[0]}-${j + c[1]}`) && !closeList.has(`${i + c[0]}-${j + c[1]}`)) {
-            
-                                    //console.log(`CHECKING ALLOWED ${c}`);
-            
-                                    if (openList.has(`${i + c[0]}-${j + c[1]}`)) {
-                                        let e = openList.get(`${i + c[0]}-${j + c[1]}`);
-            
-                                        if (board.matrix[i][j].G + diagonalWeight < e.G) {
-                                            board.matrix[i + c[0]][j + c[1]].G = +board.matrix[i][j].G + diagonalWeight;
-                                            board.matrix[i + c[0]][j + c[1]].F = +board.matrix[i + c[0]][j + c[1]].G + board.matrix[i + c[0]][j + c[1]].H;
-            
-                                            board.matrix[i + c[0]][j + c[1]].parent = board.matrix[i][j].coord;
-            
-                                            openList.set(`${i + c[0]}-${j + c[1]}`, board.matrix[i + c[0]][j + c[1]]);
-                                        }
-                                    }
-                                    else {
-            
-                                        console.log("C is///")
-                                        console.log(...c);
-                                        console.log(`board_matrix.G`);
-            
-                                        board.matrix[i + c[0]][j + c[1]].H = calculateHeuristic(board.matrix[i + c[0]][j + c[1]].coord, board.finishCell.coord);
-                                        board.matrix[i + c[0]][j + c[1]].G = Number(board.matrix[i][j].G) + Number(diagonalWeight);
-                                        board.matrix[i + c[0]][j + c[1]].F = Number(board.matrix[i + c[0]][j + c[1]].G) + board.matrix[i + c[0]][j + c[1]].H;
-            
-                                        board.matrix[i + c[0]][j + c[1]].parent = board.matrix[i][j].coord;
-            
-                                        openList.set(`${i + c[0]}-${j + c[1]}`, board.matrix[i + c[0]][j + c[1]]);
-            
-                                        console.log(`OPEN LIST HAS `)
-                                        console.log(openList.get(`${i + c[0]}-${j + c[1]}`));
-                                    }
-            
-                                    DrawBoardElem(board.matrix[i + c[0]][j + c[1]], board.matrix[i + c[0]][j + c[1]].coord);
-            
-                                    if (board.finishCell.coord.i == i + c[0] && board.finishCell.coord.j == j + c[1]) {
-                                        console.log("DRAWING PATH")
-                                        DrawPath();
-                                        return;
-                                    }
-                                }
-                            }
-                        }*/
         }
 
     }
