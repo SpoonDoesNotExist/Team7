@@ -7,6 +7,8 @@ stateColorsMap.set("wall", "#2d2f28");
 
 
 
+let cutCornersCheck = document.getElementById('cutAngles');
+
 
 class Point {
     constructor(i, j) {
@@ -31,7 +33,7 @@ class Board {
         this.size_m = m;
         this.size_n = n;
 
-        this.cutCorners = false;
+        this.cutCorners = cutCornersCheck.checked;
 
         this.startID = null
         this.finishID = null
@@ -59,6 +61,17 @@ class Board {
 
 
 let board = null;
+
+cutCornersCheck.onchange = function() {
+    if (board) {
+        board.cutCorners = this.checked;
+
+        console.log(`Current CUT CORNER state: ${this.checked}`);
+    }
+}
+
+
+
 
 function DrawBoardState(matrix_elem, coord) {
     board.field.rows[coord.i].cells[coord.j].style.backgroundColor = stateColorsMap.get(matrix_elem.state)
@@ -595,6 +608,8 @@ state4.onclick = changeState;
 // diagonal.onclick = () => {
 //     additSettings.hidden = !additSettings.hidden;
 // }
+
+
 
 // Можно ввести максимум 2 цифры в размер поля
 let sizeInput = document.getElementById('size');

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,14 +13,14 @@
     <aside id="leftPanel">
         <div id="additSection">
             <div id="miniTitle">Алгоритм А<span id="star">*</span></div>
-            <div id = "block1">
+            <div id="block1">
                 <label for="size" id="forSize">Размер поля:</label>
-                    <input type="number" maxlength="2" id="size" min="1" max="99"><br>
-                <button id="size_button">Применить</button> 
+                <input type="number" maxlength="2" id="size" min="1" max="99"><br>
+                <button id="size_button">Применить</button>
             </div>
             <div id="cut">
                 <label for="cutAngles" id="forCutAngles">Срезать углы</label>
-                    <input type="checkbox" id="cutAngles">
+                <input type="checkbox" id="cutAngles">
             </div>
             <div id="startShell">
                 <button id="start_alg">Начать поиск</button>
@@ -48,7 +49,7 @@
         <a href="../index.html" title="Перейти на главную" id="backButton">На главную</a>
         <div id="settings" hidden>
             <label for="diagonal" id="forDiagonal">Движение по диагонали</label>
-                <input type="checkbox" id="diagonal"><br>
+            <input type="checkbox" id="diagonal"><br>
             <ul id="additSettings" hidden>
                 <li>
                     <label for="moreWeight" id="forMoreWeight">Затратное движение по диагонали</label>
@@ -70,7 +71,7 @@
                 <span class="param">H</span> - примерное расстояние до конечной ячейки<br>
                 <span class="param">F</span> = <span class="param">G</span>+<span class="param">H</span><br>
                 <span class="param">F</span> влияет на порядок добавления в очередь<br>
-                <a id = "exLink" title="Перейти по ссылке" target="_blank" href="http://masters.donntu.org/2013/fknt/buga/library/AStar.htm">Подробности...</a>
+                <a id="exLink" title="Перейти по ссылке" target="_blank" href="http://masters.donntu.org/2013/fknt/buga/library/AStar.htm">Подробности...</a>
             </div>
         </div>
     </aside>
@@ -78,4 +79,5 @@
 
     <script src="A_star_new.js"></script>
 </body>
+
 </html>
