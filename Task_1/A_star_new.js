@@ -598,7 +598,7 @@ state4.onclick = changeState;
 
 // Можно ввести максимум 2 цифры в размер поля
 let sizeInput = document.getElementById('size');
-sizeInput.oninput = function () {
+sizeInput.oninput = function() {
     this.value = this.value.slice(0, this.maxLength);
     if (this.value == 0) {
         this.value = "";
