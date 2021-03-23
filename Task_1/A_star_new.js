@@ -79,35 +79,39 @@ function DrawBoardElem(matrix_elem, coord) {
 
 function removeOld(state) {
     switch (state) {
-        case "start": {
-            if (board.startCell) {
+        case "start":
+            {
+                if (board.startCell) {
 
-                console.log(board.startCell);
+                    console.log(board.startCell);
 
-                let coord = board.startCell.coord;
+                    let coord = board.startCell.coord;
 
-                console.log(coord);
+                    console.log(coord);
 
-                board.matrix[coord.i][coord.j].state = 'empty';
-                DrawBoardState(board.matrix[coord.i][coord.j], coord);
+                    board.matrix[coord.i][coord.j].state = 'empty';
+                    DrawBoardState(board.matrix[coord.i][coord.j], coord);
+                }
+                break;
             }
-            break;
-        }
-        case "finish": {
-            if (board.finishCell) {
-                let coord = board.finishCell.coord;
+        case "finish":
+            {
+                if (board.finishCell) {
+                    let coord = board.finishCell.coord;
 
-                board.matrix[coord.i][coord.j].state = 'empty';
-                DrawBoardState(board.matrix[coord.i][coord.j], coord);
+                    board.matrix[coord.i][coord.j].state = 'empty';
+                    DrawBoardState(board.matrix[coord.i][coord.j], coord);
+                }
+                break;
             }
-            break;
-        }
-        case "wall": {
+        case "wall":
+            {
 
-        }
-        case "empty": {
+            }
+        case "empty":
+            {
 
-        }
+            }
     }
 }
 
@@ -141,11 +145,12 @@ function boardElementClickHandler(t) {
     removeOld(board.current_state);
 
     switch (board.current_state) {
-        case 'start': {
-            board.startID = t.id;
-            board.startCell = new Cell(elementCoord.i, elementCoord.j);
-            break;
-        }
+        case 'start':
+            {
+                board.startID = t.id;
+                board.startCell = new Cell(elementCoord.i, elementCoord.j);
+                break;
+            }
         case 'finish':
             board.finishID = t.id;
             board.finishCell = new Cell(elementCoord.i, elementCoord.j);
@@ -177,8 +182,7 @@ function boardElementClickHandler(t) {
 
     if (matrix_elem.state == board.current_state) {
         matrix_elem.state = "empty";
-    }
-    else {
+    } else {
         matrix_elem.state = board.current_state;
     }
 
@@ -200,10 +204,10 @@ function generateField(n) {
     board.field.hidden = false;
 
     for (let i = 0; i < n; i++) {
-        let board_row = document.createElement("tr");            //Создаем строку.
+        let board_row = document.createElement("tr"); //Создаем строку.
 
         for (let j = 0; j < n; j++) {
-            let board_elem = document.createElement('td');       //Создаем элемент стороки.
+            let board_elem = document.createElement('td'); //Создаем элемент стороки.
 
             board_elem.className = "board_elem";
             board_elem.name = "empty";
@@ -212,14 +216,14 @@ function generateField(n) {
             //board_elem.onclick = boardElementClickHandler;        //Обработчик нажатия на элемент.
             //board_elem.style.fontSize = 300 / n + "px";
 
-            board_elem.onmousedown = function () {
+            board_elem.onmousedown = function() {
                 doMouseMoveTrue();
                 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 boardElementClickHandler(this);
                 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
             };
-            board_elem.onmousemove = function () {
+            board_elem.onmousemove = function() {
                 boardElementClickHandler(this);
             }
 
@@ -243,9 +247,9 @@ function generateField(n) {
 
             board_elem.value = "<span class=\"f\">f</span><br>";
 
-            board_row.append(board_elem);                       //Добавляем элемент в строку.
+            board_row.append(board_elem); //Добавляем элемент в строку.
         }
-        board.field.append(board_row);                          //Добавляем всю строку в таблицу.
+        board.field.append(board_row); //Добавляем всю строку в таблицу.
     }
 
     console.log(`Field has been created`);
@@ -316,8 +320,26 @@ function allowed(i, j) {
 let ortoghonalWeight = 10;
 let diagonalWeight = 14;
 
-function calculateHeuristic(p1, p2) {
+
+
+function manhattan(p1, p2) {
     return ortoghonalWeight * (Math.abs(p1.i - p2.i) + Math.abs(p1.j - p2.j));
+}
+
+function euclid(p1, p2) {
+    return Math.floor(Math.sqrt(Math.pow(p1.i - p2.i, 2) + Math.pow(p1.j - p2.j, 2))) * diagonalWeight;
+}
+
+let heuristicMap = new Map();
+heuristicMap.set('manhattan', manhattan);
+heuristicMap.set('euclid', euclid);
+
+
+
+let currentHeuristic = 'euclid';
+
+function calculateHeuristic(p1, p2) {
+    return heuristicMap.get(currentHeuristic)(p1, p2);
 }
 
 
@@ -329,8 +351,8 @@ function sleep(ms) {
 
 
 let ortoghonal_checks = [
-    [1, 0],
     [0, 1],
+    [1, 0],
     [-1, 0],
     [0, -1],
 ];
@@ -340,24 +362,38 @@ let diagonal_checks = [
     [-1, -1],
     [1, -1]
 ];
-let checks = [[diagonal_checks, diagonalWeight], [ortoghonal_checks, ortoghonalWeight]];
+let checks = [
+    [diagonal_checks, diagonalWeight],
+    [ortoghonal_checks, ortoghonalWeight]
+];
 
 
 let cut_corner_checks = new Map();
-cut_corner_checks.set(`${1}:${1}`, [[0, -1], [-1, 0]]);
-cut_corner_checks.set(`${1}:${-1}`, [[0, 1], [-1, 0]]);
-cut_corner_checks.set(`${-1}:${-1}`, [[0, 1], [1, 0]]);
-cut_corner_checks.set(`${-1}:${1}`, [[0, -1], [1, 0]]);
+cut_corner_checks.set(`${1}:${1}`, [
+    [0, -1],
+    [-1, 0]
+]);
+cut_corner_checks.set(`${1}:${-1}`, [
+    [0, 1],
+    [-1, 0]
+]);
+cut_corner_checks.set(`${-1}:${-1}`, [
+    [0, 1],
+    [1, 0]
+]);
+cut_corner_checks.set(`${-1}:${1}`, [
+    [0, -1],
+    [1, 0]
+]);
 
 
-function cutCornerCheck(i, j,ci,cj) {
+function cutCornerCheck(i, j, ci, cj) {
 
     console.log(`CUT CORNER CHECK: ${i} ${j}`);
 
     if (board.cutCorners) {
         return true;
-    }
-    else {
+    } else {
         if (cut_corner_checks.has(`${ci}:${cj}`)) {
             let check = cut_corner_checks.get(`${ci}:${cj}`);
 
@@ -432,7 +468,7 @@ function A_STAR_ALGORITHM() {
             for (let c in curr_checks) {
                 c = curr_checks[c];
 
-                if (allowed(i + c[0], j + c[1])&& cutCornerCheck(i + c[0], j + c[1],c[0],c[1])) {
+                if (allowed(i + c[0], j + c[1]) && cutCornerCheck(i + c[0], j + c[1], c[0], c[1])) {
                     if (!board.wallSet.has(`${i + c[0]}-${j + c[1]}`) && !closeList.has(`${i + c[0]}-${j + c[1]}`)) {
 
                         //console.log(`CHECKING ALLOWED ${c}`);
@@ -448,8 +484,7 @@ function A_STAR_ALGORITHM() {
 
                                 openList.set(`${i + c[0]}-${j + c[1]}`, board.matrix[i + c[0]][j + c[1]]);
                             }
-                        }
-                        else {
+                        } else {
 
                             console.log("C is///")
                             console.log(...c);
@@ -500,9 +535,9 @@ function startAndFinishAreDefined() {
     return false;
 }
 
-startAlgorithmButton.onclick = async function () {
+startAlgorithmButton.onclick = async function() {
     if (board) {
-        if (startAndFinishAreDefined()) {///Если на доске есть начало и конец/
+        if (startAndFinishAreDefined()) { ///Если на доске есть начало и конец/
 
             //if(board.matrix[board.finishCell.coord.i][board.finishCell.coord.i].parent.i!=-1)
             //  DrawPath(clearPath=true);
