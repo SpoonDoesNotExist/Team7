@@ -17,6 +17,10 @@
                     <input type="number" maxlength="2" id="size" min="1" max="99"><br>
                 <button id="size_button">Применить</button> 
             </div>
+            <div id="cut">
+                <label for="cutAngles" id="forCutAngles">Срезать углы</label>
+                    <input type="checkbox" id="cutAngles">
+            </div>
             <div id="startShell">
                 <button id="start_alg">Начать поиск</button>
             </div>
@@ -42,8 +46,8 @@
 
     <aside id="rightPanel">
         <a href="../index.html" title="Перейти на главную" id="backButton">На главную</a>
-        <div hidden>
-            <label for="diagonal">Движение по диагонали</label>
+        <div id="settings" hidden>
+            <label for="diagonal" id="forDiagonal">Движение по диагонали</label>
                 <input type="checkbox" id="diagonal"><br>
             <ul id="additSettings" hidden>
                 <li>
