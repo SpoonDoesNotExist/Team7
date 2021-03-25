@@ -12,8 +12,8 @@ class individual {
         return Math.sqrt(Math.pow(d1.x - d2.x, 2) + Math.pow(d1.y - d2.y, 2));
     }
 
-    countWeight(startNode) {
-        this.weight = this.getLengthBtwDots(startNode, this.bypass[0]) + this.getLengthBtwDots(this.bypass[this.bypass.length - 1], startNode);
+    countWeight() {
+        this.weight = this.getLengthBtwDots(this.bypass[this.bypass.length-1], this.bypass[0]);
         for (let i = 0; i < this.bypass.length - 1; i++) {
             this.weight += this.getLengthBtwDots(this.bypass[i], this.bypass[i + 1]);
         }
@@ -50,14 +50,14 @@ function write(array) {
 function getRandomGenom() {
     // write(nodeList);
     for (let i = nodeList.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * i) + 1;
+        let j = Math.floor(Math.random() * (i + 1));
 
         [nodeList[i], nodeList[j]] = [nodeList[j], nodeList[i]];
     }
     // write(nodeList);
 
     let genom = JSON.parse(JSON.stringify(nodeList));
-    genom.shift();
+    // genom.shift();
     // write(genom);
 
     return genom;
@@ -100,7 +100,7 @@ function setInitialGeneration() {
         //     console.log(initialGeneration[i].bypass[j]);
         // }
 
-        initialGeneration[i].countWeight(nodeList[0]);
+        initialGeneration[i].countWeight();
         console.log(`Вес пройденного пути: ${initialGeneration[i].weight}`);
     }
 
@@ -127,8 +127,13 @@ console.log(field);
 let ctx = field.getContext('2d');
 //---------------------------------------------------------
 
-//Хранит последнюю красную точку для ее переопределения
-let lastDrawed = {
+//Храним последние красную и зеленую точки для их переопределения
+let lastDrawedRed = {
+    x: -10,
+    y: -10
+};
+
+let lastDrawedGreen = {
     x: -10,
     y: -10
 };
@@ -140,7 +145,14 @@ function showBestPath(bestBypass) {
     // Перекрашивание предыдущей последней вершины
     ctx.fillStyle = 'cyan';
     ctx.beginPath();
-    ctx.arc(lastDrawed.x, lastDrawed.y, 11, 0, Math.PI * 2, false);
+    ctx.arc(lastDrawedRed.x, lastDrawedRed.y, 11, 0, Math.PI * 2, false);
+    ctx.fill();
+    ctx.stroke();
+
+    // Перекрашивание предыдущей стартовой вершины
+    ctx.fillStyle = 'cyan';
+    ctx.beginPath();
+    ctx.arc(lastDrawedGreen.x, lastDrawedGreen.y, 11, 0, Math.PI * 2, false);
     ctx.fill();
     ctx.stroke();
 
@@ -149,33 +161,32 @@ function showBestPath(bestBypass) {
     bestCtx.lineWidth = 4.8;
     bestCtx.beginPath();
 
-    bestCtx.moveTo(nodeList[0].x, nodeList[0].y);
-    bestCtx.lineTo(bestBypass[0].x, bestBypass[0].y);
+    bestCtx.moveTo(bestBypass[0].x, bestBypass[0].y);
 
     for (let i = 1; i < genomSize; i++) {
         bestCtx.lineTo(bestBypass[i].x, bestBypass[i].y);
     }
 
-    bestCtx.lineTo(nodeList[0].x, nodeList[0].y);
+    bestCtx.lineTo(bestBypass[0].x, bestBypass[0].y);
     bestCtx.closePath();
     bestCtx.stroke();
     //-------------------------------------------------------
 
     //Отмечаем стартовую вершину
-    if (lastDrawed.x == -10) {
-        ctx.fillStyle = 'green';
-        ctx.beginPath();
-        ctx.arc(nodeList[0].x, nodeList[0].y, 11, 0, Math.PI * 2, false);
-        ctx.fill();
-        ctx.stroke();
-    }
+    lastDrawedGreen = bestBypass[0];
+    ctx.fillStyle = 'green';
+
+    ctx.beginPath();
+    ctx.arc(lastDrawedGreen.x, lastDrawedGreen.y, 11, 0, Math.PI * 2, false);
+    ctx.fill();
+    ctx.stroke();
 
     //Отмечаем новую последнюю вершину
-    lastDrawed = bestBypass[genomSize - 1];
+    lastDrawedRed = bestBypass[genomSize - 1];
     ctx.fillStyle = 'red';
 
     ctx.beginPath();
-    ctx.arc(lastDrawed.x, lastDrawed.y, 11, 0, Math.PI * 2, false);
+    ctx.arc(lastDrawedRed.x, lastDrawedRed.y, 11, 0, Math.PI * 2, false);
     ctx.fill();
     ctx.stroke();
     //-------------------------------------------------------
@@ -186,6 +197,28 @@ function showBestPath(bestBypass) {
     //     console.log(`${bestBypass[i].x} | ${bestBypass[i].y}`);
     // }
     // console.log(`${nodeList[0].x} | ${nodeList[0].y}`);
+}
+
+function getWeight(generation) {
+    let weight = 0;
+    for (let i = 0; i < populationCount; i++) {
+        weight += generation[i].weight;
+    }
+    return weight;
+}
+
+function Mutation(generation) {
+    for (let i = nodeList.length; i < populationCount; i++) {
+        //Шанс на мутацию 50%
+        if (Math.random() < 0.5) {
+            let border = getRandomIntInclusive(1, genomSize-1);
+            let part1 = generation[i].bypass.slice(0, border);
+            let part2 = generation[i].bypass.slice(border, genomSize);
+            generation[i].bypass = part1.reverse().concat(part2.reverse());
+            generation[i].countWeight();
+        }
+    }
+    return generation;
 }
 
 function getChild(parent1, parent2) {
@@ -200,7 +233,7 @@ function getChild(parent1, parent2) {
     // }
 
     let newGenom = parent1.bypass.slice(0, border);
-    
+
     for (let k = 0; k < genomSize && newGenom.length < genomSize; k++) {
         if (newGenom.some(function (curValue, index, arr) {
             if (curValue.x == this.x && curValue.y == this.y) {
@@ -215,22 +248,22 @@ function getChild(parent1, parent2) {
 
     let child = new individual(newGenom);
 
-    //Шанс на мутацию 40%
-    if (Math.random() < 0.3) {
-        let repeats = getRandomIntInclusive(genomSize/3, genomSize - 1);
-        for (let j = 0; j < repeats; j++) {
+    // //Шанс на мутацию 40%
+    // if (Math.random() < 0.3) {
+    //     let repeats = getRandomIntInclusive(genomSize/3, genomSize - 1);
+    //     for (let j = 0; j < repeats; j++) {
 
-            let gen1, gen2;
-            do {
-                gen1 = getRandomIntInclusive(0, genomSize - 1);
-                gen2 = getRandomIntInclusive(0, genomSize - 1);
-            } while (gen1 == gen2);
+    //         let gen1, gen2;
+    //         do {
+    //             gen1 = getRandomIntInclusive(0, genomSize - 1);
+    //             gen2 = getRandomIntInclusive(0, genomSize - 1);
+    //         } while (gen1 == gen2);
 
-            [child.bypass[gen1], child.bypass[gen2]] = [child.bypass[gen2], child.bypass[gen1]];
-        }
-    }
+    //         [child.bypass[gen1], child.bypass[gen2]] = [child.bypass[gen2], child.bypass[gen1]];
+    //     }
+    // }
 
-    child.countWeight(nodeList[0]);
+    child.countWeight();
     return child;
 }
 
@@ -244,7 +277,7 @@ function getNextGeneration(curGeneration) {
     //     }
     // }
 
-    for (let i = 0; i < populationCount*9/10; i++) {
+    for (let i = 0; i < populationCount * 9 / 10; i++) {
         let parent1, parent2;
         do {
             parent1 = curGeneration[getRandomIntInclusive(0, populationCount - 1)];
@@ -255,7 +288,10 @@ function getNextGeneration(curGeneration) {
         nextGeneration.push(child);
     }
 
-    let naturalSelection = curGeneration.slice(0, populationCount/10).concat(nextGeneration);
+    let naturalSelection = curGeneration.slice(0, populationCount / 10).concat(nextGeneration);
+    if (getWeight(naturalSelection) > getWeight(curGeneration)) {
+        naturalSelection = Mutation(naturalSelection);
+    }
     naturalSelection.sort(forSort);
     return naturalSelection;
 }
@@ -266,12 +302,22 @@ function geneticAlgorithm() {
     let curGeneration = setInitialGeneration();
     curGeneration.sort(forSort);
 
+    // let theBestIndivid = curGeneration[0];
+    // showBestPath(theBestIndivid.bypass);
+
     console.log("Начало цикла");
     console.log("--------------------------------------------------------------");
-    for (let generationNumber = 1; generationNumber <= 1000; generationNumber++) {
+    for (let generationNumber = 1; generationNumber <= 3000; generationNumber++) {
 
         curGeneration = getNextGeneration(curGeneration);
         showBestPath(curGeneration[0].bypass);
+
+        // if (curGeneration[0].weight < theBestIndivid.weight) {
+        //     theBestIndivid = curGeneration[0];
+        //     showBestPath(theBestIndivid.bypass);
+        // }
+
+
 
         console.log(`${generationNumber} поколение прошло`);
         console.log(`Вес лучшего пути: ${curGeneration[0].weight}`);
@@ -494,8 +540,8 @@ let startButton = document.getElementsByClassName('start')[0];
 startButton.onclick = () => {
     if (nodeList.length > 1) {
 
-        populationCount = nodeList.length*10;
-        genomSize = nodeList.length - 1;
+        populationCount = nodeList.length * 10;
+        genomSize = nodeList.length;
         allowSetDots = false;
         geneticAlgorithm();
 
