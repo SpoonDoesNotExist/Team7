@@ -2,14 +2,15 @@ body {
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: 1fr 1200px 1fr;
+    grid-template-columns: 1fr 1fr 1000px 1fr 1fr;
     grid-template-rows: 1fr 700px 1fr;
     height: 100vh;
+    background-color: #222831;
 }
 
 /*-----------------------------------------------------------------------------------------------------------*/
 .leftPanel {
-    background-color:cornflowerblue;
+    background-color:#00BBF0;
     grid-row-start: 1;
     grid-row-end: 4;
     grid-column-start: 1;
@@ -30,20 +31,23 @@ body {
 
 /*-----------------------------------------------------------------------------------------------------------*/
 .forCanvas {
-    grid-column-start: 2;
+    grid-column-start: 3;
     grid-row-start: 2;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
     padding: 0;
-    border: 2px solid black;
-    box-sizing: border-box;
     position: relative;
 }
 
 .canvas {
     position: absolute;
+}
+
+#forLines {
+    background-color: #393E46;
+    border: 2px solid #EEEEEE;
 }
 /*-----------------------------------------------------------------------------------------------------------*/
 
@@ -52,6 +56,6 @@ body {
     background-color:crimson;
     grid-row-start: 1;
     grid-row-end: 4;
-    grid-column-start: 3;
+    grid-column-start: 5;
 }
 /*-----------------------------------------------------------------------------------------------------------*/

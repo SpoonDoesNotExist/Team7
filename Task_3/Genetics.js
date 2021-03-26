@@ -13,7 +13,7 @@ class individual {
     }
 
     countWeight() {
-        this.weight = this.getLengthBtwDots(this.bypass[this.bypass.length-1], this.bypass[0]);
+        this.weight = this.getLengthBtwDots(this.bypass[this.bypass.length - 1], this.bypass[0]);
         for (let i = 0; i < this.bypass.length - 1; i++) {
             this.weight += this.getLengthBtwDots(this.bypass[i], this.bypass[i + 1]);
         }
@@ -138,27 +138,28 @@ let lastDrawedGreen = {
     y: -10
 };
 
-function showBestPath(bestBypass) {
+function resetLines() {
     // Очистка линий
     bestCtx.clearRect(0, 0, forBest.width, forBest.height);
 
     // Перекрашивание предыдущей последней вершины
-    ctx.fillStyle = 'cyan';
+    ctx.fillStyle = '#EEEEEE';
     ctx.beginPath();
     ctx.arc(lastDrawedRed.x, lastDrawedRed.y, 11, 0, Math.PI * 2, false);
     ctx.fill();
     ctx.stroke();
 
     // Перекрашивание предыдущей стартовой вершины
-    ctx.fillStyle = 'cyan';
     ctx.beginPath();
     ctx.arc(lastDrawedGreen.x, lastDrawedGreen.y, 11, 0, Math.PI * 2, false);
     ctx.fill();
     ctx.stroke();
+}
 
+function drawLines(bestBypass, strokeStyle, lineWidth) {
     // Генерация новых линий
-    bestCtx.strokeStyle = 'black';
-    bestCtx.lineWidth = 4.8;
+    bestCtx.strokeStyle = strokeStyle;
+    bestCtx.lineWidth = lineWidth;
     bestCtx.beginPath();
 
     bestCtx.moveTo(bestBypass[0].x, bestBypass[0].y);
@@ -174,7 +175,7 @@ function showBestPath(bestBypass) {
 
     //Отмечаем стартовую вершину
     lastDrawedGreen = bestBypass[0];
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = '#4ECCA3';
 
     ctx.beginPath();
     ctx.arc(lastDrawedGreen.x, lastDrawedGreen.y, 11, 0, Math.PI * 2, false);
@@ -183,7 +184,7 @@ function showBestPath(bestBypass) {
 
     //Отмечаем новую последнюю вершину
     lastDrawedRed = bestBypass[genomSize - 1];
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = '#FF2E63';
 
     ctx.beginPath();
     ctx.arc(lastDrawedRed.x, lastDrawedRed.y, 11, 0, Math.PI * 2, false);
@@ -199,69 +200,112 @@ function showBestPath(bestBypass) {
     // console.log(`${nodeList[0].x} | ${nodeList[0].y}`);
 }
 
-function getWeight(generation) {
-    let weight = 0;
-    for (let i = 0; i < populationCount; i++) {
-        weight += generation[i].weight;
-    }
-    return weight;
+function showBestPath(bestBypass) {
+    resetLines();
+    drawLines(bestBypass, 'white', 4.8);
 }
 
-function Mutation(generation) {
-    for (let i = nodeList.length; i < populationCount; i++) {
-        //Шанс на мутацию 50%
-        if (Math.random() < 0.5) {
-            let border = getRandomIntInclusive(1, genomSize-1);
-            let part1 = generation[i].bypass.slice(0, border);
-            let part2 = generation[i].bypass.slice(border, genomSize);
-            generation[i].bypass = part1.reverse().concat(part2.reverse());
-            generation[i].countWeight();
+// function Mutation(generation) {
+//     for (let i = nodeList.length; i < populationCount; i++) {
+//         //Шанс на мутацию 40%
+//         if (Math.random() < 0.3) {
+
+//             let border = getRandomIntInclusive(1, genomSize - 1);
+//             let part1 = generation[i].bypass.slice(0, border);
+//             let part2 = generation[i].bypass.slice(border, genomSize);
+//             generation[i].bypass = part1.reverse().concat(part2.reverse());
+//             generation[i].countWeight();
+
+//             // let gen1, gen2;
+//             // do {
+//             //     gen1 = getRandomIntInclusive(0, genomSize - 1);
+//             //     gen2 = getRandomIntInclusive(0, genomSize - 1);
+//             // } while (gen1 === gen2);
+
+//             // [generation[i].bypass[gen1], generation[i].bypass[gen2]] = [generation[i].bypass[gen2], generation[i].bypass[gen1]];
+//             // generation[i].countWeight();
+//         }
+//     }
+//     return generation;
+// }
+let mutationPercent = 0.7;
+function mutationChance(child) {
+    //Шанс на мутацию 70%
+    if (Math.random() < mutationPercent) {
+
+        // let repeats = getRandomIntInclusive(1, 1);
+        // for (let j = 0; j < repeats; j++) {
+        //     let gen1, gen2;
+        //     do {
+        //         gen1 = getRandomIntInclusive(0, genomSize - 1);
+        //         gen2 = getRandomIntInclusive(0, genomSize - 1);
+        //     } while (gen1 == gen2);
+
+        //     [child.bypass[gen1], child.bypass[gen2]] = [child.bypass[gen2], child.bypass[gen1]];
+        // }
+        // let gen1, gen2;
+        // do {
+        //     gen1 = getRandomIntInclusive(0, genomSize - 1);
+        //     gen2 = getRandomIntInclusive(0, genomSize - 1);           
+        // } while (gen1 == gen2);
+        // [child.bypass[gen1], child.bypass[gen2]] = [child.bypass[gen2], child.bypass[gen1]];
+
+        // let border = getRandomIntInclusive(1, genomSize - 1);
+
+        // let part1 = child.bypass.slice(0, border).reverse();
+        // let part2 = child.bypass.slice(border, genomSize).reverse();
+
+        // child.bypass = part1.concat(part2);
+
+        let border1, border2;
+        do {
+            border1 = getRandomIntInclusive(0, genomSize);
+            border2 = getRandomIntInclusive(0, genomSize);
+        } while (border1 == border2);
+
+        if (border1 > border2) {
+            [border1, border2] = [border2, border1];
         }
+
+        let part1 = child.bypass.slice(0, border1);
+        let part2 = child.bypass.slice(border1, border2).reverse();
+        let part3 = child.bypass.slice(border2, genomSize);
+
+        child.bypass = part1.concat(part2, part3);
     }
-    return generation;
+
+    return child;
+}
+
+function includes(curValue, index, arr) {
+    if (curValue.x == this.x && curValue.y == this.y) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function getChild(parent1, parent2) {
+
     let border = getRandomIntInclusive(1, genomSize - 1);
-
-    // if (Math.random() < 0.5) {
-    //     console.log("До изменения---------------------------");
-    //     console.log(`${parent1.weight} | ${parent2.weight}`);
-    //     [parent1, parent2] = [parent2, parent1];
-    //     console.log(`${parent1.weight} | ${parent2.weight}`);
-    //     console.log("После изменения---------------------------");
-    // }
-
     let newGenom = parent1.bypass.slice(0, border);
 
-    for (let k = 0; k < genomSize && newGenom.length < genomSize; k++) {
-        if (newGenom.some(function (curValue, index, arr) {
-            if (curValue.x == this.x && curValue.y == this.y) {
-                return true;
-            } else {
-                return false;
-            }
-        }, parent2.bypass[k]) == false) {
+    for (let k = border; k < genomSize; k++) {
+        if (newGenom.some(includes, parent2.bypass[k]) == false) {
             newGenom.push(parent2.bypass[k]);
         }
     }
 
+    if (newGenom.length < genomSize) {
+        for (let k = border; newGenom.length < genomSize; k++) {
+            if (newGenom.some(includes, parent1.bypass[k]) == false) {
+                newGenom.push(parent1.bypass[k]);
+            }
+        }
+    }
+
     let child = new individual(newGenom);
-
-    // //Шанс на мутацию 40%
-    // if (Math.random() < 0.3) {
-    //     let repeats = getRandomIntInclusive(genomSize/3, genomSize - 1);
-    //     for (let j = 0; j < repeats; j++) {
-
-    //         let gen1, gen2;
-    //         do {
-    //             gen1 = getRandomIntInclusive(0, genomSize - 1);
-    //             gen2 = getRandomIntInclusive(0, genomSize - 1);
-    //         } while (gen1 == gen2);
-
-    //         [child.bypass[gen1], child.bypass[gen2]] = [child.bypass[gen2], child.bypass[gen1]];
-    //     }
-    // }
+    child = mutationChance(child);
 
     child.countWeight();
     return child;
@@ -269,15 +313,19 @@ function getChild(parent1, parent2) {
 
 function getNextGeneration(curGeneration) {
 
-    let nextGeneration = [];
     // for (let par1 = 0; par1 < populationCount - 1; par1++) {
     //     for (let par2 = par1 + 1; par2 < populationCount; par2++) {
+
     //         let child = getChild(curGeneration[par1], curGeneration[par2]);
-    //         nextGeneration.push(child);
+    //         curGeneration.push(child);
+
+    //         let secChild = getChild(curGeneration[par2], curGeneration[par1]);
+    //         curGeneration.push(secChild);
     //     }
     // }
 
-    for (let i = 0; i < populationCount * 9 / 10; i++) {
+    // //let nextGeneration = [];
+    for (let i = 0; i < populationCount; i++) {
         let parent1, parent2;
         do {
             parent1 = curGeneration[getRandomIntInclusive(0, populationCount - 1)];
@@ -285,19 +333,79 @@ function getNextGeneration(curGeneration) {
         } while (parent1 === parent2);
 
         let child = getChild(parent1, parent2);
-        nextGeneration.push(child);
+        curGeneration.push(child);
+
+        let secChild = getChild(parent2, parent1);
+        curGeneration.push(secChild);
     }
 
-    let naturalSelection = curGeneration.slice(0, populationCount / 10).concat(nextGeneration);
-    if (getWeight(naturalSelection) > getWeight(curGeneration)) {
-        naturalSelection = Mutation(naturalSelection);
-    }
-    naturalSelection.sort(forSort);
-    return naturalSelection;
+    //let naturalSelection = curGeneration.slice(0, populationCount / 10).concat(nextGeneration);
+    //naturalSelection.sort(forSort);
+    //return naturalSelection.slice(0, populationCount);
+    curGeneration.sort(forSort);
+    return curGeneration.slice(0, populationCount);
 }
 
 //Сам алгоритм
 function geneticAlgorithm() {
+    console.log("Начало алгоритма");
+    let curGeneration = setInitialGeneration();
+    curGeneration.sort(forSort);
+
+    let theBestIndivid = curGeneration[0];
+    showBestPath(theBestIndivid.bypass);
+
+    let bestChanged = 0;
+    let bestGeneration = 1;
+
+    console.log("Начало цикла");
+    console.log("--------------------------------------------------------------");
+
+    let generationNumber = 1, childrenCount = 0;
+    setTimeout(function runAlgorithm() {
+
+        curGeneration = getNextGeneration(curGeneration);
+        //showBestPath(curGeneration[0].bypass);
+
+        bestChanged++;
+        // if (mutationPercent < 0.7) {
+        //     mutationPercent += 0.005;
+        // }
+        if (curGeneration[0].weight < theBestIndivid.weight) {
+
+            console.log(`${generationNumber} поколений прошло`);
+            console.log(`Предыдущий лучший путь был в ${bestGeneration} поколении`);
+            console.log(`Вес лучшего пути: ${theBestIndivid.weight}`);
+            console.log(`Количество потомков: ${childrenCount}`);
+            console.log("--------------------------------------------------------------");
+
+            theBestIndivid = curGeneration[0];
+            // console.log(``);
+            bestChanged = 0;
+            //mutationPercent = 0.1;
+            bestGeneration = generationNumber;
+            showBestPath(theBestIndivid.bypass);
+        }
+
+        generationNumber++;
+        childrenCount += populationCount * 2;
+
+        if (bestChanged >= 500) {
+            drawLines(theBestIndivid.bypass, '#00BBF0', 7.0);
+
+            console.log("Алгоритм завершен!");
+            console.log(`Количество вершин: ${nodeList.length}`);
+            console.log(mutationPercent);
+            console.log(`Вес лучшего пути: ${theBestIndivid.weight}`);
+            console.log(`${generationNumber} поколение`);
+        } else {
+            setTimeout(runAlgorithm, 100 / 60);
+        }
+    }, 100 / 60);
+}
+
+//Старая версия алгоритма
+function oldgeneticAlgorithm() {
     console.log("Начало алгоритма");
     let curGeneration = setInitialGeneration();
     curGeneration.sort(forSort);
@@ -307,7 +415,7 @@ function geneticAlgorithm() {
 
     console.log("Начало цикла");
     console.log("--------------------------------------------------------------");
-    for (let generationNumber = 1; generationNumber <= 3000; generationNumber++) {
+    for (let generationNumber = 1, childrenCount = 0; generationNumber <= 3000; generationNumber++, childrenCount += populationCount * 9 / 10) {
 
         curGeneration = getNextGeneration(curGeneration);
         showBestPath(curGeneration[0].bypass);
@@ -440,101 +548,72 @@ function geneticAlgorithm() {
 // let ctx = field.getContext('2d');
 
 // Обработка расположения вершин (точек)
-let fieldRect = field.getBoundingClientRect();
-let allowSetDots = false;
-field.addEventListener('mousedown', function (e) {
+//let fieldRect = field.getBoundingClientRect();
 
-    if (allowSetDots) {
-        //Вывод положения в окне и на экране
-        console.log(`
+let allowSetDots = false;
+let buttonPushed = false;
+
+function forEvent(e, gap) {
+    //Вывод положения в окне и на экране
+    console.log(`
         relX: ${e.offsetX} abs: ${e.clientX}
         relY: ${e.offsetY} abs: ${e.clientY}
         `);
 
-        let curNode = {
-            x: e.offsetX,
-            y: e.offsetY
-        };
+    let curNode = {
+        x: e.offsetX,
+        y: e.offsetY
+    };
 
-        let radius = 11;
+    let radius = 11;
 
-        let noCross = true;
-        for (const node of nodeList) {
-            if (Math.abs(node.x - curNode.x) < radius * 2 && Math.abs(node.y - curNode.y) < radius * 2) {
-                noCross = false;
-                break;
-            }
+    let noCross = true;
+    for (const node of nodeList) {
+        if (Math.abs(node.x - curNode.x) < radius * 2 * gap && Math.abs(node.y - curNode.y) < radius * 2 * gap) {
+
+            noCross = false;
+            break;
         }
+    }
 
-        // Проверка на то, чтобы визуализации вершин не пересекались
-        if (noCross) {
-            ctx.fillStyle = 'cyan';
+    let noBorder = true;
+    if (curNode.x < 12 || curNode.y < 12 || curNode.x > 988 || curNode.y > 688) {
+        noBorder = false;
+    }
 
+    // Проверка на то, чтобы визуализации вершин не пересекались
+    if (noCross && noBorder) {
+        ctx.fillStyle = '#EEEEEE';
+        ctx.strokeStyle = '#393E46';
 
-            ctx.beginPath();
-            ctx.arc(e.clientX - fieldRect.left, e.clientY - fieldRect.top, radius, 0, Math.PI * 2, false);
-            ctx.fill();
-            ctx.stroke();
+        ctx.beginPath();
+        //ctx.arc(e.clientX - fieldRect.left, e.clientY - fieldRect.top, radius, 0, Math.PI * 2, false);
+        ctx.arc(e.offsetX, e.offsetY, radius, 0, Math.PI * 2, false);
+        ctx.fill();
+        ctx.stroke();
 
-            nodeList.push(curNode);
-        }
+        nodeList.push(curNode);
+    }
+}
+
+// Клики и вождение мышкой
+field.addEventListener('mousedown', function (e) {
+    if (allowSetDots) {
+        buttonPushed = true;
+        forEvent(e, 1);
     }
 });
 
-// nodeList.push({
-//     x:122,
-//     y:100
-// })
+field.addEventListener('mousemove', function (e) {
+    if (buttonPushed) {
+        forEvent(e, 2);
+    }
+});
 
-// nodeList.push({
-//     x:14,
-//     y:11
-// })
+document.body.addEventListener('mouseup', function (e) {
+    buttonPushed = false;
+})
 
-// nodeList.push({
-//     x:129,
-//     y:115
-// })
-
-// nodeList.push({
-//     x:112,
-//     y:44
-// })
-
-// nodeList.push({
-//     x:6,
-//     y:135
-// })
-
-// nodeList.push({
-//     x:141,
-//     y:68
-// })
-
-// nodeList.push({
-//     x:54,
-//     y:78
-// })
-
-// nodeList.push({
-//     x:165,
-//     y:54
-// })
-
-// nodeList.push({
-//     x:84,
-//     y:25
-// })
-
-// nodeList.push({
-//     x:96,
-//     y:89
-// })
-
-// nodeList.push({
-//     x:76,
-//     y:148
-// })
 
 let startButton = document.getElementsByClassName('start')[0];
 startButton.onclick = () => {
@@ -542,6 +621,7 @@ startButton.onclick = () => {
 
         populationCount = nodeList.length * 10;
         genomSize = nodeList.length;
+        //mutationPercent = 0.3;
         allowSetDots = false;
         geneticAlgorithm();
 
@@ -560,8 +640,7 @@ setDots.onclick = () => {
 console.log(setDots);
 
 
-
 // При каждом изменении размера окна, делаем корректным видимость курсора внутри окна
-window.addEventListener('resize', function () {
-    fieldRect.getBoundingClientRect();
-})
+// window.addEventListener('resize', function () {
+//     fieldRect.getBoundingClientRect();
+// })
