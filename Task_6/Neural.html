@@ -14,15 +14,16 @@
                 <div id = "upperColorButtons">
                     <button class = "colorButton" id = "whiteButton">Белый</button>
                     <button class = "colorButton" id = "blackButton">Чёрный</button>
+                    Текущий цвет: <span id = "currentColorShow"></span>
                 </div>
                 <div id = "lowerColorButtons">
-                    <button class = "colorButton" id = "allWhiteButton">Сделать всё белым</button>
-                    <button class = "colorButton" id = "allBlackButton">Сделать всё чёрным</button>
+                    <button class = "colorButton" id = "allPaintButton">Закрасить всё</button>
                 </div>
             </div>
 
             <button class = "instructionButton" id = "readPictureButton">Обрабатывать</button><br>
-            <span id = "ask">Вы ввели <span id = "output">5</span>?
+            <span id = "ask" hidden>
+                Вы ввели <span id = "output">5</span>?
                 <button class = "instructionButton" id = "yesButton">Да</button>
                 <button class = "instructionButton" id = "noButton">Нет</button><br>
             </span>
