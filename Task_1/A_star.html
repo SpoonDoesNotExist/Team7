@@ -18,14 +18,28 @@
                 <input type="number" maxlength="2" id="size" min="1" max="99"><br>
                 <button id="size_button">Применить</button>
             </div>
+            <div class="radio_group">
+                <div class="radio_group-item">
+                    <input id="manhattan" type="radio" name="radio" value="manhattan" checked>
+                    <label for="manhattan">Манхэттэн</label>
+                </div>
+                <div class="radio_group-item">
+                    <input id="euclidean" type="radio" name="radio" value="euclidean">
+                    <label for="euclidean">Эвклид</label>
+                </div>
+            </div>
             <div id="cut">
                 <label for="cutAngles" id="forCutAngles">Срезать углы</label>
                 <input type="checkbox" id="cutAngles">
             </div>
+            <button id="build_maze">Построить лабиринт</button>
             <div id="startShell">
                 <button id="start_alg">Начать поиск</button>
             </div>
         </div>
+        <label for="iteration_sleep" id='iter_label'>Скорость поиска<br>
+            <input id='iteration_sleep' type="range" min="0" max="500" step="10" value="50">
+        </label>
         <div id="states_block">
             <div id="forStates">Выбрать задаваемое состояние:</div>
             <div id="allStates">
