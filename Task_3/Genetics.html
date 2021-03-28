@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,16 +8,43 @@
     <title>Genetic Algorithm</title>
     <link rel="stylesheet" href="Genetics.css">
 </head>
+
 <body>
     <aside class="leftPanel">
         <button class="start">Начать поиск</button>
-        <button class="setDots">Задать вершины</button>
+        <button class="setDots">Разместить города</button>
+        <button class="clearButton">Очистить поле</button>
     </aside>
+    <div class="title">Генетический Алгоритм</div>
     <div class="forCanvas">
-        <canvas class="canvas" id="forLines" width = 1000 height = 700>zxc beast2</canvas>
-        <canvas class="canvas" width = 1000 height = 700>zxc beast</canvas>
+        <canvas class="canvas" id="forLines" width=1000 height=700>zxc beast2</canvas>
+        <canvas class="canvas" id="forDots" width=1000 height=700>zxc beast</canvas>
     </div>
-    <aside class="rightPanel"></aside>
+    <div class="search">Разместите города...</div>
+    <aside class="rightPanel">
+        <a href="../index.html" id="back">На главную</a>
+        <div class="parameters">
+            <div class="greenDot"></div>
+            <div class="greenDesc">— Начальный город</div>
+            <hr class="colorDivider">
+            <div class="redDot"></div>
+            <div class="redDesc">— Конечный город</div>
+        </div>
+        <div class="algDescription">
+            <div class="task">Решение задачи коммивояжёра</div>
+            <!-- <hr class="divider mainDivider"> -->
+            <div class="nodeCount">Количество городов: 0</div>
+            <hr class="divider">
+            <div class="bestBypass">Самый выгодный обход: ...$</div>
+            <hr class="divider">
+            <div class="children">Было рождено: 0 потомков</div>
+            <hr class="divider">
+            <div class="generation">Текущее поколение: №1</div>
+            <hr class="divider">
+            <div class="toSource"><a href="" title="Подробнее о Генетическом алгоритме" class="toSourceLink">Подробности...</a></div>
+        </div>
+    </aside>
     <script src="Genetics.js"></script>
 </body>
+
 </html>

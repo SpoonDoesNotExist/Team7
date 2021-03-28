@@ -117,11 +117,11 @@ function forSort(left, right) {
 }
 
 //Поле для линий и доп точек
-let forBest = document.getElementsByClassName("canvas")[0];
-let bestCtx = forBest.getContext('2d');
+let forLines = document.getElementById("forLines");
+let bestCtx = forLines.getContext('2d');
 
 //Поле для вершин
-let field = document.getElementsByClassName("canvas")[1];
+let field = document.getElementById("forDots");
 console.log(field);
 
 let ctx = field.getContext('2d');
@@ -140,7 +140,7 @@ let lastDrawedGreen = {
 
 function resetLines() {
     // Очистка линий
-    bestCtx.clearRect(0, 0, forBest.width, forBest.height);
+    bestCtx.clearRect(0, 0, forLines.width, forLines.height);
 
     // Перекрашивание предыдущей последней вершины
     ctx.fillStyle = '#EEEEEE';
@@ -202,7 +202,7 @@ function drawLines(bestBypass, strokeStyle, lineWidth) {
 
 function showBestPath(bestBypass) {
     resetLines();
-    drawLines(bestBypass, 'white', 4.8);
+    drawLines(bestBypass, '#D3D4D8', 4.8);
 }
 
 // function Mutation(generation) {
@@ -257,21 +257,24 @@ function mutationChance(child) {
 
         // child.bypass = part1.concat(part2);
 
-        let border1, border2;
-        do {
-            border1 = getRandomIntInclusive(0, genomSize);
-            border2 = getRandomIntInclusive(0, genomSize);
-        } while (border1 == border2);
+        let repeats = getRandomIntInclusive(1, 3);
+        for (let j = 0; j < repeats; j++) {
+            let border1, border2;
+            do {
+                border1 = getRandomIntInclusive(0, genomSize);
+                border2 = getRandomIntInclusive(0, genomSize);
+            } while (border1 == border2);
 
-        if (border1 > border2) {
-            [border1, border2] = [border2, border1];
+            if (border1 > border2) {
+                [border1, border2] = [border2, border1];
+            }
+
+            let part1 = child.bypass.slice(0, border1);
+            let part2 = child.bypass.slice(border1, border2).reverse();
+            let part3 = child.bypass.slice(border2, genomSize);
+
+            child.bypass = part1.concat(part2, part3);
         }
-
-        let part1 = child.bypass.slice(0, border1);
-        let part2 = child.bypass.slice(border1, border2).reverse();
-        let part3 = child.bypass.slice(border2, genomSize);
-
-        child.bypass = part1.concat(part2, part3);
     }
 
     return child;
@@ -313,19 +316,19 @@ function getChild(parent1, parent2) {
 
 function getNextGeneration(curGeneration) {
 
+    let nextGeneration = [];
     // for (let par1 = 0; par1 < populationCount - 1; par1++) {
     //     for (let par2 = par1 + 1; par2 < populationCount; par2++) {
 
     //         let child = getChild(curGeneration[par1], curGeneration[par2]);
-    //         curGeneration.push(child);
+    //         nextGeneration.push(child);
 
     //         let secChild = getChild(curGeneration[par2], curGeneration[par1]);
-    //         curGeneration.push(secChild);
+    //         nextGeneration.push(secChild);
     //     }
     // }
 
-    // //let nextGeneration = [];
-    for (let i = 0; i < populationCount; i++) {
+    for (let i = 0; i < populationCount*10; i++) {
         let parent1, parent2;
         do {
             parent1 = curGeneration[getRandomIntInclusive(0, populationCount - 1)];
@@ -333,17 +336,17 @@ function getNextGeneration(curGeneration) {
         } while (parent1 === parent2);
 
         let child = getChild(parent1, parent2);
-        curGeneration.push(child);
+        nextGeneration.push(child);
 
         let secChild = getChild(parent2, parent1);
-        curGeneration.push(secChild);
+        nextGeneration.push(secChild);
     }
 
-    //let naturalSelection = curGeneration.slice(0, populationCount / 10).concat(nextGeneration);
-    //naturalSelection.sort(forSort);
-    //return naturalSelection.slice(0, populationCount);
-    curGeneration.sort(forSort);
-    return curGeneration.slice(0, populationCount);
+    let naturalSelection = curGeneration.slice(0, populationCount*0.3).concat(nextGeneration);
+    naturalSelection.sort(forSort);
+    return naturalSelection.slice(0, populationCount);
+    // curGeneration.sort(forSort);
+    // return curGeneration.slice(0, populationCount);
 }
 
 //Сам алгоритм
@@ -355,7 +358,7 @@ function geneticAlgorithm() {
     let theBestIndivid = curGeneration[0];
     showBestPath(theBestIndivid.bypass);
 
-    let bestChanged = 0;
+    let bestNoChanged = 0;
     let bestGeneration = 1;
 
     console.log("Начало цикла");
@@ -367,7 +370,7 @@ function geneticAlgorithm() {
         curGeneration = getNextGeneration(curGeneration);
         //showBestPath(curGeneration[0].bypass);
 
-        bestChanged++;
+        bestNoChanged++;
         // if (mutationPercent < 0.7) {
         //     mutationPercent += 0.005;
         // }
@@ -380,17 +383,25 @@ function geneticAlgorithm() {
             console.log("--------------------------------------------------------------");
 
             theBestIndivid = curGeneration[0];
+
+            let bestWeight = Math.round(theBestIndivid.weight*100)/100;
+            bestWeight = bestWeight.toString().replace('.', ',');
+            mostCheapBypass.innerHTML = `Самый выгодный обход: ${bestWeight}...$`;
+
             // console.log(``);
-            bestChanged = 0;
+            bestNoChanged = 0;
             //mutationPercent = 0.1;
             bestGeneration = generationNumber;
             showBestPath(theBestIndivid.bypass);
         }
 
         generationNumber++;
-        childrenCount += populationCount * 2;
+        currentGeneration.innerHTML = `Текущее поколение: №${generationNumber}`;
 
-        if (bestChanged >= 500) {
+        childrenCount += populationCount * 20;
+        children.innerHTML = `Было рождено: ${childrenCount} потомков`;
+
+        if (bestNoChanged >= 300) {
             drawLines(theBestIndivid.bypass, '#00BBF0', 7.0);
 
             console.log("Алгоритм завершен!");
@@ -398,6 +409,15 @@ function geneticAlgorithm() {
             console.log(mutationPercent);
             console.log(`Вес лучшего пути: ${theBestIndivid.weight}`);
             console.log(`${generationNumber} поколение`);
+
+            startButton.disabled = false;
+            clearButton.disabled = false;
+            setDots.disabled = false;
+            
+            setDots.innerHTML = "Разместить города"
+            setDots.className = "setDots";
+            clearButton.className = "clearButton";
+            startButton.className = "start";
         } else {
             setTimeout(runAlgorithm, 100 / 60);
         }
@@ -550,6 +570,19 @@ function oldgeneticAlgorithm() {
 // Обработка расположения вершин (точек)
 //let fieldRect = field.getBoundingClientRect();
 
+//Надпись про количество городов
+let nodeCountLabel = document.getElementsByClassName('nodeCount')[0];
+
+//Надпись про текущее поколение
+let currentGeneration = document.getElementsByClassName('generation')[0];
+
+
+//Надпись про самый выгодный обход
+let mostCheapBypass = document.getElementsByClassName('bestBypass')[0];
+
+//Надпись про количество детей
+let children = document.getElementsByClassName('children')[0];
+
 let allowSetDots = false;
 let buttonPushed = false;
 
@@ -583,6 +616,7 @@ function forEvent(e, gap) {
 
     // Проверка на то, чтобы визуализации вершин не пересекались
     if (noCross && noBorder) {
+
         ctx.fillStyle = '#EEEEEE';
         ctx.strokeStyle = '#393E46';
 
@@ -593,6 +627,7 @@ function forEvent(e, gap) {
         ctx.stroke();
 
         nodeList.push(curNode);
+        nodeCountLabel.innerHTML = `Количество городов: ${nodeList.length}`;
     }
 }
 
@@ -614,31 +649,84 @@ document.body.addEventListener('mouseup', function (e) {
     buttonPushed = false;
 })
 
+//Идет поиск с точками
+let searching = document.getElementsByClassName("search")[0];
+
+let setDots = document.getElementsByClassName('setDots')[0];
+setDots.onclick = () => {
+    allowSetDots = !allowSetDots;
+    if (allowSetDots) {
+        setDots.innerHTML = "Размещение разрешено";
+        setDots.className += " pushed";
+        field.className += " cursor";
+    } else {
+        setDots.innerHTML = "Размеcтить города";
+        setDots.className = "setDots";
+        field.className = "canvas";
+    }
+};
+console.log(setDots);
+
+let clearButton = document.getElementsByClassName('clearButton')[0];
+clearButton.onclick = () => {
+    bestCtx.clearRect(0, 0, forLines.width, forLines.height);
+    ctx.clearRect(0, 0, field.width, field.height);
+
+    lastDrawedGreen = {
+        x:-10,
+        y:-10
+    }
+    lastDrawedRed = {
+        x:-10,
+        y:-10
+    }
+
+    nodeList = [];
+    searching.innerHTML="Разместите города...";
+    nodeCountLabel.innerHTML="Количество городов: 0";
+    currentGeneration.innerHTML="Текущее поколение: №1";
+    mostCheapBypass.innerHTML="Самый выгодный обход: ...$";
+    children.innerHTML = "Было рождено: 0 потомков";
+}
 
 let startButton = document.getElementsByClassName('start')[0];
 startButton.onclick = () => {
     if (nodeList.length > 1) {
 
-        populationCount = nodeList.length * 10;
+        populationCount = nodeList.length;
         genomSize = nodeList.length;
-        //mutationPercent = 0.3;
+        clearButton.disabled = true;
+        startButton.disabled = true;
+        setDots.disabled = true;
         allowSetDots = false;
-        geneticAlgorithm();
 
+        setDots.className = "setDots disabled";
+        clearButton.className += " disabled";
+        startButton.className += " disabled";
+        field.className = "canvas";
+        
+        searching.innerHTML = "Идёт поиск";
+        setTimeout(function search() {
+
+            if (searching.textContent.length < 13) {
+                searching.innerHTML+=".";
+            } else {
+                searching.innerHTML = "Идёт поиск";
+            }
+            
+            if (startButton.disabled) {
+                setTimeout(search, 500);
+            } else {
+                searching.innerHTML = "Маршрут построен!";
+            }
+        }, 500);
+
+        geneticAlgorithm();
     } else {
         alert('Укажите больше 1 вершины!');
     }
 };
 console.log(startButton);
-
-
-
-let setDots = document.getElementsByClassName('setDots')[0];
-setDots.onclick = () => {
-    allowSetDots = !allowSetDots;
-};
-console.log(setDots);
-
 
 // При каждом изменении размера окна, делаем корректным видимость курсора внутри окна
 // window.addEventListener('resize', function () {
