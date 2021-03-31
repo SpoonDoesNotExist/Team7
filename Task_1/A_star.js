@@ -671,26 +671,6 @@ function setStateCoordinates(element) {
     }
 }
 
-<<<<<<< HEAD
-
-let wallSet = new Set();
-
-function checkWallSet(element) {
-
-    console.log(`CHECK WALL SET`);
-    console.log(element.id);
-
-    if (currentState == "wall" && element.name == "empty") {
-        wallSet.add(element.id);
-    }
-    else {
-        wallSet.delete(element.id);
-    }
-}
-
-//Обработчик нажатий на элементы доски.
-function boardElementClickHandler() {
-=======
 let wereMousedown = false;
 
 function doMouseOverFalse(){
@@ -700,7 +680,6 @@ function doMouseOverFalse(){
 function doMouseOverTrue(){
     wereMousedown = true;
 }
->>>>>>> origin/ArmenAndMynka
 
 //Обработчик нажатий на элементы доски.
 function boardElementOverHandler() {
