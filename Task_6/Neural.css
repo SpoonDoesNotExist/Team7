@@ -24,7 +24,11 @@ button:focus{
     box-shadow: 0 0 10px 2px #6a5d63;
 }
 
-input:focus{
+button:active{
+    box-shadow: 0 0 10px 2px #6a5d63;
+}
+
+input:active{
     outline: none;
 }
 
@@ -50,7 +54,7 @@ button:hover{
     box-shadow: 0 0 10px 3px #6a5d63;
 }
 
-button:focus{
+button:active{
     outline: none;
     box-shadow: 0 0 20px 2px #6a5d63;
 }
@@ -99,7 +103,7 @@ button:focus{
     height: 30px;
     width: 49%;
     cursor: pointer;
-    font-size: 17px;
+    font-size: 16px;
     font-family: Georgia, 'Times New Roman', Times, serif;
     box-shadow: 0 0 1px 1px #6a5d63;
 }
@@ -111,7 +115,6 @@ button:focus{
 
 .colorButton:focus{
     outline: none;
-    box-shadow: 0 0 20px 2px #6a5d63;
 }
 
 #whiteButton{
@@ -130,7 +133,7 @@ button:focus{
     display: flex;
     flex-direction: row;
     margin-left: 4%;
-    font-size: 17.5px;
+    font-size: 16px;
 }
 
 .currentColorShow{
@@ -157,7 +160,7 @@ button:focus{
     border: 1px #cdb78a solid;
     color: #cdb78a;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     font-family: Georgia, 'Times New Roman', Times, serif;
     box-shadow: 0 0 1px 1px #6a5d63;
 }
@@ -188,7 +191,7 @@ button:focus{
     margin-top: 10px;
     width: 180px;
     height: 30px;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 #ask{
@@ -197,7 +200,7 @@ button:focus{
 
 #output{
     display: inline-block;
-    font-size: 20px;
+    font-size: 18px;
     color:#6a5d63;
     text-align: center;
     font-family: Georgia, 'Times New Roman', Times, serif;
@@ -212,13 +215,9 @@ button:focus{
 }
 
 #newData{
-    width: 30px;
     background-color: #cdb78a;
     border: 1px #8f5d3a solid;
     color: #6a5d63;
-    font-size: 18px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    padding-bottom: 5px;
 }
 
 #sendButton{
@@ -300,10 +299,11 @@ button:focus{
 }
 
 #downloadButton{
-    align-self: center;
+    align-self: flex-end;
     width: 150px;
     line-height: 30px;
     margin-top: 15px;
+    margin-right: 8px;
     background-color: #cdb78a;
     border: 1px #8f5e3a solid;
     color: #8f5e3a;
@@ -505,7 +505,7 @@ button:focus{
     background-color: #64423c;
     border: none;
     color:#cdb78a;
-    font-size: 14px;
+    font-size: 16px;
     font-family: Georgia, 'Times New Roman', Times, serif;
     cursor: pointer;
     box-shadow: none;
@@ -534,8 +534,6 @@ button:focus{
 
 #drawingArea{
     border: 1px #000000 solid;
-    width: 500px;
-    height: 500px;
     cursor: pointer;
     font-size:0px;
     margin-top: 20px;
