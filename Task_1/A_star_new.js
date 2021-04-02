@@ -33,7 +33,7 @@ function sleep(ms) {
 let stateColorsMap = new Map();
 stateColorsMap.set("empty", "#a49582");
 stateColorsMap.set("start", "#bc7837");
-stateColorsMap.set("finish", "#3f0d16");
+stateColorsMap.set("finish", "#4b0e19");
 stateColorsMap.set("wall", "#2d2f28");
 stateColorsMap.set("closed", "#797474");
 stateColorsMap.set("open", "#5f9ea0");
