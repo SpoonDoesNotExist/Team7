@@ -22,7 +22,6 @@
                 <button id = "allPaintButton">закрасить всё</button>
             </div>
 
-            <button class = "instructionButton" id = "readPictureButton" hidden>обрабатывать</button>
             <div id = "ask">
                 Вы ввели <div id = "output">5</div>?
                 <button class = "instructionButton" id = "yesButton">да</button>
@@ -54,7 +53,7 @@
                     <div id = "createTestsTitle" class = "miniTitle">Генерация тестов</div>
                     <div id = "testsAddBlock">
                         <div id = "testsInputBlock">
-                            Введено: 
+                            <label for = "testsInput">Введено:</label> 
                             <input type = "number" id = "testsInput" value = "0" maxlength = "2" min = "0" max = "9">
                         </div>
                         <button id = "addTestButton">добавить</button>
@@ -73,9 +72,9 @@
                         </div>
                     </div>
                     <div id = "megaLearnTimes">
-                        Прогнать
+                        <label for = "megaLearnInput">Прогнать</label>
                         <input type = "number" value = "1" id = "megaLearnInput" min = "0">
-                        раз
+                        <label for = "megaLearnInput">раз</label>
                     </div>
                     <button id = "megaLearnStartButton">учись!</button>
                     <div id = "learningState" hidden></div>
@@ -87,6 +86,48 @@
 
         <aside id = "rightPanel">
             <a href = "../index.html" id = "onMain">На главную</a>
+            <button id = "whatAreTheWeightsButton">- Что за веса?</button>
+            <div id = "whatAreTheWeightsBlock" style = "display: none;">
+                <p class = "textFirst">
+                    Когда вы открываете страницу, нейросеть ещё не обучена. Она обучается, 
+                    когда вы взаимодействуете с ней: нажимаете кнопки "да" или "нет" и "отправить данные"
+                </p>
+                <p>
+                    Может быть немного больно, если вы целый день обучали её, а потом случайно
+                    обновили браузер и все ваши труды слетели
+                </p>
+                <p>
+                    Для того, чтобы избежать этого, воспользуйтесь меню "веса":
+                </p>
+                <p class = "textLast">
+                    Нажмите на кнопку "скачать новые веса", чтобы получить данные на свой компьютер.
+                    После обновления страницы нажмите "загрузить веса" и выберите скачанный ранее файл.
+                    Так нейронка вспомнит всё то, что знала
+                </p>
+            </div>
+            <button id = "whatAreTheTestsButton">- Что за выборки?</button>
+            <div id = "whatAreTheTestsBlock" style = "display: none;">
+                <p class = "textFirst">
+                    Если вы хотите обучить нейронку быстро и качественно, мы создали меню "выборки"
+                </p>
+                <p>
+                    В верхней части меню расположен блок "Генерация тестов". Нарисуйте на холсте цифру,
+                    введите значение в коричневой рамочке и кликните "добавить". Программа добавит
+                    ваш тест в выборку
+                </p>
+                <p>
+                    Когда все тесты введены, нажмите "скачать тесты". Файл формата json попадёт на ваш 
+                    компьютер
+                </p>
+                <p>
+                    В блоке "Быстрое обучение" вы можете загрузить скачанные тесты. При этом те тесты, что
+                    вы ввели, заменятся на загруженные. Вы можете добавить в выборку и загрузить общий файл
+                </p>
+                <p class = "textLast">
+                    В последней части меню установите число прогонов и ткните "учись!". Код прогонит ваши 
+                    тесты заданное количество раз и нейронка станет умненькой. Можете скачивать новые веса
+                </p>
+            </div>
         </aside>
 
         <script src = "Neural.js"></script>

@@ -1,3 +1,8 @@
+//------------------Ожидание---------------------------------------
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 //------------------Функции и константы для алгоритма--------------
 function sigmoid(x) {
     return 1 / (1 + Math.exp(-x));
@@ -133,15 +138,12 @@ let currentNetwork;
 
 
 
-
-
 //----------------Все элементы левого меню------------------------
 let whiteButton = document.getElementById("whiteButton");
 let blackButton = document.getElementById("blackButton");
 let currentColorShow = document.getElementById('currentColorShow');
 let allPaintButton = document.getElementById("allPaintButton");
 
-let readPictureButton = document.getElementById("readPictureButton");
 let ask = document.getElementById('ask');
 let output = document.getElementById('output');
 let yesButton = document.getElementById("yesButton");
@@ -197,6 +199,7 @@ for (let i = 0; i < pxQuan; i++) {
 }
 currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
 
+
 let drawingArea = document.getElementById("drawingArea");
 drawingArea.style.height = size + "px";
 drawingArea.style.width = size + "px";
@@ -215,7 +218,6 @@ function doisMousedownFalse() {
 }
 
 document.body.onmouseup = doisMousedownFalse; //если мышку отпустили в любом месте body, отменить нажатие
-console.log(currentNetwork);
 
 function changePixelState(pixel) {
     if (!isMousedown) return;
@@ -263,13 +265,6 @@ allPaintButton.onclick = paintAll;
 
 
 //--------------Кнопки управления----------------
-/*readPictureButton.onclick = function(){
-    ask.hidden = false;
-    sanksText.hidden = true;
-    currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
-    output.innerHTML = currentNetwork.getBest();
-}*/
-
 yesButton.onclick = function () {
     sanksText.hidden = false;
     currentNetwork.setVoided(currentNetwork.getBest());
@@ -360,12 +355,13 @@ uploadTestsButton.onchange = function () {
     textUploadedTests.hidden = false;
 }
 
-megaLearnStartButton.onclick = function () {
+megaLearnStartButton.onclick = async function () {
     learningState.innerText = "Обрабатывается...";
     learningState.hidden = false;
     for (let i = 0; i < megaLearnInput.value; i++) {
         megaLearning(testsArray);
     }
+    await sleep(1500);
     learningState.innerText = "Готово!"
 }
 
@@ -393,4 +389,29 @@ testsBlockButton.onclick = function () {
         testsBlock.style.display = "none";
     }
     weightsBlock.style.display = "none";
+}
+
+let whatAreTheWeightsButton = document.getElementById('whatAreTheWeightsButton');
+let whatAreTheWeightsBlock = document.getElementById('whatAreTheWeightsBlock');
+let whatAreTheTestsButton = document.getElementById('whatAreTheTestsButton');
+let whatAreTheTestsBlock = document.getElementById('whatAreTheTestsBlock');
+
+whatAreTheWeightsButton.onclick = function () {
+    if (whatAreTheWeightsBlock.style.display == "none") {
+        whatAreTheWeightsBlock.style.display = "block";
+    }
+    else {
+        whatAreTheWeightsBlock.style.display = "none";
+    }
+    whatAreTheTestsBlock.style.display = "none";
+}
+
+whatAreTheTestsButton.onclick = function () {
+    if (whatAreTheTestsBlock.style.display == "none") {
+        whatAreTheTestsBlock.style.display = "block";
+    }
+    else {
+        whatAreTheTestsBlock.style.display = "none";
+    }
+    whatAreTheWeightsBlock.style.display = "none";
 }
