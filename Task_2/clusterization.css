@@ -1,0 +1,142 @@
+body {
+    background-color: #110c0ec0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+#samples_field {
+    border: 5px solid #87eb58;
+    position: relative;
+}
+
+#clusters_count_label {
+    width: 300px;
+    height: 300px;
+    font-weight: bold;
+    font-size: 52px;
+    color: white;
+}
+
+#leftPanel {
+    position: relative;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 0;
+    max-height: 1000px;
+    height: 98vh;
+    width: 20vw;
+    /*position: absolute;*/
+    flex: 50% 50% 0%;
+    background-color: #358d6ed7;
+}
+
+#start_clusterization {
+    display: block;
+    margin: 0 auto;
+    width: 65%;
+    height: 15%;
+    min-width: 22%;
+    padding-top: .6em;
+    padding-bottom: .6em;
+    font-size: 25px;
+    font-weight: bold;
+    color: #EEEEEE;
+    background-color: #110c0ec0;
+    border: 2px solid #110c0ec0;
+    border-radius: 15px;
+    outline: none;
+    text-align: center;
+    cursor: pointer;
+    transition: .3s;
+}
+
+#clusters_count_label {
+    color: #ffffff;
+    font-weight: bold;
+    margin-left: 0.5%;
+    width: 79%;
+    margin-right: 0;
+    font-size: 2.5vw;
+}
+
+#clusters_count {
+    padding: 0;
+    width: 15%;
+    font-size: 1.5vw;
+    text-align: center;
+}
+
+#input_K {
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+    text-align: center;
+}
+
+.metric {
+    display: inline-block;
+    margin: auto;
+    font-weight: bold;
+    font-size: 30px;
+    color: white;
+}
+
+.line {
+    display: inline-block;
+    margin-bottom: 20px;
+    background: rgb(50, 199, 236);
+    width: 50px;
+    height: 5px;
+}
+
+.metric_block {
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.all_metrics {
+    padding: 1em;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-top: 10%;
+}
+
+.circle {
+    display: inline-block;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 50px;
+    height: 50px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background: rgb(231, 64, 64);
+}
+
+.little {
+    width: 30px;
+    height: 30px;
+    background: rgb(50, 199, 236);
+}
+
+.rectangle {
+    display: inline-block;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 50px;
+    height: 50px;
+    background: rgb(226, 111, 16);
+}
