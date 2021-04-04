@@ -3,7 +3,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-//------------------Функции и константы для алгоритма--------------
+//------------------Функции, используемые программой--------------------------
 function sigmoid(x) {
     return 1 / (1 + Math.exp(-x));
 }
@@ -32,6 +32,10 @@ function getNumberOfMax(arr) {
         }
     }
     return maxNum;
+}
+
+function div(a, b){
+    return (a - a%b)/b;
 }
 
 //----------------Веса нейронной сети-------------------
@@ -204,11 +208,11 @@ for (let i = 0; i < pxQuan; i++) {
 currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
 
 async function updateNetwork() {
-    sanksText.hidden = true;
     currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
-    output.innerHTML = currentNetwork.getBest();}
+    output.innerHTML = currentNetwork.getBest();
+}
 
-let regularChangeNetwork = setInterval(updateNetwork, 3000);
+let regularChangeNetwork = setInterval(updateNetwork, 500);
 
 
 let drawingArea = document.getElementById("drawingArea");
@@ -239,9 +243,14 @@ function changePixels(pixel){
     if (!isMousedown) return;  
     let thisPixel = pixel.id;
     let lineWidht = lineWidhtInput.value;
-    for(let diffAbs = 0; diffAbs < lineWidht; diffAbs++){
-        for(let diffLeft = 0; diffLeft <= diffAbs; diffLeft++){
+
+    for(let diffAbs = 0; diffAbs <= lineWidht; diffAbs++){
+        for(let diffLeft = 0; diffLeft <= diffAbs && diffLeft <= lineWidht/1.2; diffLeft++){
             let diffUp = diffAbs - diffLeft;
+            if (diffUp > lineWidht/1.2){
+                continue;
+            }
+
             if(thisPixel % pxQuan - diffLeft >= 0){
                 if(+thisPixel - diffUp*pxQuan >= 0){
                     let leftUpPixel = document.getElementById(+thisPixel - diffLeft - diffUp*pxQuan);
@@ -252,6 +261,7 @@ function changePixels(pixel){
                     changePixelState(leftDownPixel);
                 }
             }
+
             if(thisPixel % pxQuan + diffLeft < pxQuan){
                 if(+thisPixel - diffUp*pxQuan >= 0){
                     let rightUpPixel = document.getElementById(+thisPixel + diffLeft - diffUp*pxQuan);
@@ -317,12 +327,14 @@ allPaintButton.onclick = paintAll;
     output.innerHTML = currentNetwork.getBest();
 }*/
 
-yesButton.onclick = function () {
+yesButton.onclick = async function () {
     sanksText.hidden = false;
     currentNetwork.setVoided(currentNetwork.getBest());
     let derivates = new NeuralDerivs(currentNetwork, networkParameters);
     networkParameters = learnNeuralNetwork(currentNetwork, networkParameters, derivates);
     calculateError(currentNetwork.voided, currentNetwork.layer[currentNetwork.end]);
+    await sleep(1000);
+    sanksText.hidden = true;
 }
 
 noButton.onclick = function () {
@@ -330,7 +342,7 @@ noButton.onclick = function () {
     sanksText.hidden = true;
 }
 
-sendButton.onclick = function () {
+sendButton.onclick = async function () {
     //ask.hidden = true;
     newDataBlock.hidden = true;
     sanksText.hidden = false;
@@ -338,6 +350,8 @@ sendButton.onclick = function () {
     let derivates = new NeuralDerivs(currentNetwork, networkParameters);
     networkParameters = learnNeuralNetwork(currentNetwork, networkParameters, derivates);
     calculateError(currentNetwork.voided, currentNetwork.layer[currentNetwork.end]);
+    await sleep(1000);
+    sanksText.hidden = true;
 }
 
 //------------------upload/download weights--------------
@@ -390,10 +404,10 @@ addTestButton.onclick = function () {
 }
 
 downloadTestsButton.onclick = function () {
-    let newtxt = JSON.stringify(testsArray, null, 4);
-    let file = new Blob([newtxt], { type: 'application/json' });
-    downloadTestsButton.href = URL.createObjectURL(file);
-    downloadTestsButton.download = "testsUp.json";
+    let newtxt = JSON.stringify(testsArray, null, 4);//делает из нрмального массива json с 4 пробелами в табах
+    let file = new Blob([newtxt], { type: 'application/json' }); //создаёт новый файл типа json
+    downloadTestsButton.href = URL.createObjectURL(file); //тоже что-то делает
+    downloadTestsButton.download = "testsUp.json"; //а тут пишем название скачиваемого файла
 }
 
 uploadTestsButton.onchange = function () {
@@ -410,11 +424,11 @@ uploadTestsButton.onchange = function () {
 megaLearnStartButton.onclick = async function () {
     learningState.innerText = "Обрабатывается...";
     learningState.hidden = false;
+    await sleep(100);
     for (let i = 0; i < megaLearnInput.value; i++) {
         megaLearning(testsArray, 30);
         console.log(`Я сейчас на ${i+1} прогоне`);
     }
-    await sleep(1500);
     learningState.innerText = "Готово!"
 }
 
