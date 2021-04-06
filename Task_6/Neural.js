@@ -144,12 +144,12 @@ let blackButton = document.getElementById("blackButton");
 let currentColorShow = document.getElementById('currentColorShow');
 let allPaintButton = document.getElementById("allPaintButton");
 
-let ask = document.getElementById('ask');
+let askBlock = document.getElementById('askBlock');
 let output = document.getElementById('output');
 let yesButton = document.getElementById("yesButton");
 let noButton = document.getElementById("noButton");
 let newDataBlock = document.getElementById("newDataBlock");
-let newData = document.getElementById('newData');
+let newDataInput = document.getElementById('newDataInput');
 let sendButton = document.getElementById("sendButton");
 let sanksText = document.getElementById("sanksText");
 
@@ -163,7 +163,7 @@ let megaLearnInput = document.getElementById('megaLearnInput');
 let textUploadedTests = document.getElementById('textUploadedTests');
 let testsFileName = document.getElementById('testsFileName');
 let megaLearnStartButton = document.getElementById('megaLearnStartButton');
-let learningState = document.getElementById('learningState');
+let learningStateText = document.getElementById('learningStateText');
 
 let addTestButton = document.getElementById('addTestButton');
 let testsInput = document.getElementById('testsInput');
@@ -279,10 +279,10 @@ noButton.onclick = function () {
 }
 
 sendButton.onclick = function () {
-    //ask.hidden = true;
+    //askBlock.hidden = true;
     newDataBlock.hidden = true;
     sanksText.hidden = false;
-    currentNetwork.setVoided(newData.value);
+    currentNetwork.setVoided(newDataInput.value);
     let derivates = new NeuralDerivs(currentNetwork, networkParameters);
     networkParameters = learnNeuralNetwork(currentNetwork, networkParameters, derivates);
     calculateError(currentNetwork.voided, currentNetwork.layer[currentNetwork.end]);
@@ -356,13 +356,13 @@ uploadTestsButton.onchange = function () {
 }
 
 megaLearnStartButton.onclick = async function () {
-    learningState.innerText = "Обрабатывается...";
-    learningState.hidden = false;
+    learningStateText.innerText = "Обрабатывается...";
+    learningStateText.hidden = false;
     for (let i = 0; i < megaLearnInput.value; i++) {
         megaLearning(testsArray);
     }
     await sleep(1500);
-    learningState.innerText = "Готово!"
+    learningStateText.innerText = "Готово!"
 }
 
 //---------------Таинственные исчезновения-----------

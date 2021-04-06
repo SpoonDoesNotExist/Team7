@@ -34,10 +34,6 @@ function getNumberOfMax(arr) {
     return maxNum;
 }
 
-function div(a, b){
-    return (a - a%b)/b;
-}
-
 //----------------Веса нейронной сети-------------------
 function beginWeight() {
     return Math.random()/50;
@@ -151,12 +147,12 @@ let lineWidhtInput = document.getElementById('lineWidhtInput');
 let allPaintButton = document.getElementById("allPaintButton");
 
 let readPictureButton = document.getElementById("readPictureButton");
-let ask = document.getElementById('ask');
+let askBlock = document.getElementById('askBlock');
 let output = document.getElementById('output');
 let yesButton = document.getElementById("yesButton");
 let noButton = document.getElementById("noButton");
 let newDataBlock = document.getElementById("newDataBlock");
-let newData = document.getElementById('newData');
+let newDataInput = document.getElementById('newDataInput');
 let sendButton = document.getElementById("sendButton");
 let sanksText = document.getElementById("sanksText");
 
@@ -165,16 +161,18 @@ let textUploaded = document.getElementById('textUploaded');
 let weightsFileName = document.getElementById('weightsFileName');
 let downloadButton = document.getElementById('downloadButton');
 
+let addTestButton = document.getElementById('addTestButton');
+let addTestText = document.getElementById('addTestText');
+let testsQuantityText = document.getElementById('testsQuantityText');
+let testsInput = document.getElementById('testsInput');
+let downloadTestsButton = document.getElementById('downloadTestsButton');
+
 let uploadTestsButton = document.getElementById('uploadTestsButton');
 let megaLearnInput = document.getElementById('megaLearnInput');
 let textUploadedTests = document.getElementById('textUploadedTests');
 let testsFileName = document.getElementById('testsFileName');
 let megaLearnStartButton = document.getElementById('megaLearnStartButton');
-let learningState = document.getElementById('learningState');
-
-let addTestButton = document.getElementById('addTestButton');
-let testsInput = document.getElementById('testsInput');
-let downloadTestsButton = document.getElementById('downloadTestsButton');
+let learningStateText = document.getElementById('learningStateText');
 
 //------------------Кнопки управления цветом------------
 let currentColor = "black";
@@ -239,15 +237,19 @@ function changePixelState(pixel) {
     pixelsValues[pixel.id] = currentValue;
 }
 
+function drawingParametres(){
+    this.lineWidht = lineWidhtInput.value - 1
+}
+
 function changePixels(pixel){
     if (!isMousedown) return;  
     let thisPixel = pixel.id;
-    let lineWidht = lineWidhtInput.value;
+    let lineWidht = lineWidhtInput.value - 1;
 
     for(let diffAbs = 0; diffAbs <= lineWidht; diffAbs++){
-        for(let diffLeft = 0; diffLeft <= diffAbs && diffLeft <= lineWidht/1.2; diffLeft++){
+        for(let diffLeft = 0; diffLeft <= diffAbs && diffLeft <= lineWidht/(Math.sqrt(lineWidht-1)+1); diffLeft++){
             let diffUp = diffAbs - diffLeft;
-            if (diffUp > lineWidht/1.2){
+            if (diffUp > lineWidht/(Math.sqrt(lineWidht-1)+1)){
                 continue;
             }
 
@@ -321,7 +323,7 @@ allPaintButton.onclick = paintAll;
 
 //--------------Кнопки управления----------------
 /*readPictureButton.onclick = function(){
-    ask.hidden = false;
+    askBlock.hidden = false;
     sanksText.hidden = true;
     currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
     output.innerHTML = currentNetwork.getBest();
@@ -343,10 +345,10 @@ noButton.onclick = function () {
 }
 
 sendButton.onclick = async function () {
-    //ask.hidden = true;
+    //askBlock.hidden = true;
     newDataBlock.hidden = true;
     sanksText.hidden = false;
-    currentNetwork.setVoided(newData.value);
+    currentNetwork.setVoided(newDataInput.value);
     let derivates = new NeuralDerivs(currentNetwork, networkParameters);
     networkParameters = learnNeuralNetwork(currentNetwork, networkParameters, derivates);
     calculateError(currentNetwork.voided, currentNetwork.layer[currentNetwork.end]);
@@ -396,18 +398,22 @@ function megaLearning(arrayTests, step) {
     }
 }
 
-addTestButton.onclick = function () {
+addTestButton.onclick = async function () {
     let newElem = createTestsArrayElement(pixelsValues, testsInput.value);
     testsArray.push(newElem);
+    addTestText.hidden = false;
+    testsQuantityText.innerText = testsArray.length;
     console.log("add:");
     console.log(newElem);
+    await sleep(1500);
+    addTestText.hidden = true;
 }
 
 downloadTestsButton.onclick = function () {
-    let newtxt = JSON.stringify(testsArray, null, 4);//делает из нрмального массива json с 4 пробелами в табах
-    let file = new Blob([newtxt], { type: 'application/json' }); //создаёт новый файл типа json
-    downloadTestsButton.href = URL.createObjectURL(file); //тоже что-то делает
-    downloadTestsButton.download = "testsUp.json"; //а тут пишем название скачиваемого файла
+    let newtxt = JSON.stringify(testsArray, null, 4);
+    let file = new Blob([newtxt], { type: 'application/json' });
+    downloadTestsButton.href = URL.createObjectURL(file);
+    downloadTestsButton.download = "testsUp.json";
 }
 
 uploadTestsButton.onchange = function () {
@@ -422,63 +428,132 @@ uploadTestsButton.onchange = function () {
 }
 
 megaLearnStartButton.onclick = async function () {
-    learningState.innerText = "Обрабатывается...";
-    learningState.hidden = false;
+    learningStateText.innerText = "Обрабатывается...";
+    learningStateText.hidden = false;
     await sleep(100);
     for (let i = 0; i < megaLearnInput.value; i++) {
         megaLearning(testsArray, 30);
         console.log(`Я сейчас на ${i+1} прогоне`);
     }
-    learningState.innerText = "Готово!"
+    learningStateText.innerText = "Готово!"
 }
 
 //---------------Таинственные исчезновения-----------
+function hideAll(blocks){
+    for (let i = 0; i < blocks.length; i++){
+        blocks[i].style.display = "none";
+    }
+}
+
 let weightsBlockButton = document.getElementById('weightsBlockButton');
 let weightsBlock = document.getElementById('weightsBlock');
 let testsBlockButton = document.getElementById('testsBlockButton');
 let testsBlock = document.getElementById('testsBlock');
 
+let instructionBlocks = [weightsBlock, testsBlock];
+
+function hideInstruction(exception){
+    if(exception.style.display == "none"){
+        hideAll(instructionBlocks);
+        exception.style.display = "flex";
+    }
+    else{
+        hideAll(instructionBlocks);
+    }
+}
+
 weightsBlockButton.onclick = function () {
-    if (weightsBlock.style.display == "none") {
-        weightsBlock.style.display = "flex";
-    }
-    else {
-        weightsBlock.style.display = "none";
-    }
-    testsBlock.style.display = "none";
+    hideInstruction(weightsBlock)
 }
 
 testsBlockButton.onclick = function () {
-    if (testsBlock.style.display == "none") {
-        testsBlock.style.display = "flex";
-    }
-    else {
-        testsBlock.style.display = "none";
-    }
-    weightsBlock.style.display = "none";
+    hideInstruction(testsBlock);
 }
 
 let whatAreTheWeightsButton = document.getElementById('whatAreTheWeightsButton');
 let whatAreTheWeightsBlock = document.getElementById('whatAreTheWeightsBlock');
 let whatAreTheTestsButton = document.getElementById('whatAreTheTestsButton');
 let whatAreTheTestsBlock = document.getElementById('whatAreTheTestsBlock');
+let keyboardInfoButton = document.getElementById('keyboardInfoButton');
+let keyboardInfoBlock = document.getElementById('keyboardInfoBlock');
+
+let infoBlocks = [whatAreTheWeightsBlock, whatAreTheTestsBlock, keyboardInfoBlock];
+
+function hideInfo(exception){
+    if(exception.style.display == "none"){
+        hideAll(infoBlocks);
+        exception.style.display = "block";
+    }
+    else{
+        hideAll(infoBlocks);
+    }
+}
 
 whatAreTheWeightsButton.onclick = function () {
-    if (whatAreTheWeightsBlock.style.display == "none") {
-        whatAreTheWeightsBlock.style.display = "block";
-    }
-    else {
-        whatAreTheWeightsBlock.style.display = "none";
-    }
-    whatAreTheTestsBlock.style.display = "none";
+    hideInfo(whatAreTheWeightsBlock);
 }
 
 whatAreTheTestsButton.onclick = function () {
-    if (whatAreTheTestsBlock.style.display == "none") {
-        whatAreTheTestsBlock.style.display = "block";
-    }
-    else {
-        whatAreTheTestsBlock.style.display = "none";
-    }
-    whatAreTheWeightsBlock.style.display = "none";
+    hideInfo(whatAreTheTestsBlock);
 }
+
+keyboardInfoButton.onclick = function () {
+    hideInfo(keyboardInfoBlock);
+}
+
+//---------------Клавиатурные события-------------------
+function keyboardClick(key){
+    switch(key){
+        case "Space": 
+            allPaintButton.onclick();
+            return;
+        case "KeyW":
+            whiteButton.onclick();
+            return;
+        case "KeyB":
+            blackButton.onclick();
+            return;
+        case "KeyY":
+            yesButton.onclick();
+            return;
+        case "KeyN":
+            noButton.onclick();
+            return;
+        case "KeyS":
+            sendButton.onclick();
+            return;
+        case "KeyU":
+            lineWidhtInput.focus();
+            return;
+        case "KeyD":
+            newDataInput.focus();
+            return;
+        case "KeyE":
+            weightsBlockButton.onclick();
+            return;
+        case "KeyT":
+            testsBlockButton.onclick();
+            return;
+        case "KeyA":
+            addTestButton.onclick();
+            return;
+        case "KeyH":
+            keyboardInfoButton.onclick();
+            return;
+    }
+}
+
+document.body.onkeydown = function(){
+    keyboardClick(event.code);
+}
+
+//----------ограничения на инпуты--------
+
+lineWidhtInput.oninput = function() {
+    lineWidhtInput.value = lineWidhtInput.value.slice(0, lineWidhtInput.maxLength);
+}
+
+newDataInput.oninput = function() {
+    newDataInput.value = newDataInput.value.slice(0, newDataInput.maxLength);
+}
+

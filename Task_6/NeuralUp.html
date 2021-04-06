@@ -28,14 +28,14 @@
             </div>
 
             <button class = "instructionButton" id = "readPictureButton" hidden>обрабатывать</button>
-            <div id = "ask">
+            <div id = "askBlock">
                 Вы ввели <div id = "output">5</div>?
                 <button class = "instructionButton" id = "yesButton">да</button>
                 <button class = "instructionButton" id = "noButton">нет</button>
             </div>
             <div id = "newDataBlock" hidden>
-                <label for = "newData" id = "forNewData">А что вы ввели?</label>
-                <input type = "number" id = "newData" value = "0" maxlength = "2" min = "0" max = "9">
+                <label for = "newDataInput" id = "forNewData">А что вы ввели?</label>
+                <input type = "number" id = "newDataInput" value = "0" maxlength = "1" min = "0" max = "9">
                 <button class = "instructionButton" id = "sendButton">отправить данные для обучения</button>
             </div>
             <span id = "sanksText" hidden>Спасибо!</span>
@@ -63,6 +63,11 @@
                             <input type = "number" id = "testsInput" value = "0" maxlength = "2" min = "0" max = "9">
                         </div>
                         <button id = "addTestButton">добавить</button>
+                        <div id = "addTestText" hidden>
+                            В выборке
+                            <div id = "testsQuantityText"></div>
+                            тестов
+                        </div>
                     </div>
                     <a id = "downloadTestsButton">скачать тесты</a>
                 </div>
@@ -83,7 +88,7 @@
                         <label for = "megaLearnInput">раз</label>
                     </div>
                     <button id = "megaLearnStartButton">учись!</button>
-                    <div id = "learningState" hidden></div>
+                    <div id = "learningStateText" hidden></div>
                 </div>
             </div>
         </aside>
@@ -111,6 +116,7 @@
                     Так нейронка вспомнит всё то, что знала
                 </p>
             </div>
+
             <button id = "whatAreTheTestsButton">- Что за выборки?</button>
             <div id = "whatAreTheTestsBlock" style = "display: none;">
                 <p class = "textFirst">
@@ -133,6 +139,27 @@
                     В последней части меню установите число прогонов и ткните "учись!". Код прогонит ваши 
                     тесты заданное количество раз и нейронка станет умненькой. Можете скачивать новые веса
                 </p>
+            </div>
+
+            <button id = "keyboardInfoButton">- Для ленивых</button>
+            <div id = "keyboardInfoBlock" style="display: none;">
+                <p class = "textFirst">
+                    Если вам лень каждый раз переносить мышку с поля на боковое меню, вы можете 
+                    использовать клавиатуру. Далее приведён список "клавиша - кнопка бокового меню"
+                </p>
+                <ul class = "textLast">
+                    <li>W - "белый"</li>
+                    <li>B - "чёрный"</li>
+                    <li>U - "радиус линии"</li>
+                    <li>Space - "закрасить всё"</li>
+                    <li>Y - "да"</li>
+                    <li>N - "нет"</li>
+                    <li>D - "а что вы ввели?"</li>
+                    <li>E - "веса"</li>
+                    <li>T - "выборки"</li>
+                    <li>A - "добавить" [тест]</li>
+                    <li>H - "для ленивых"</li>
+                </ul>
             </div>
         </aside>
 

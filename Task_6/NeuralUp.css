@@ -213,8 +213,10 @@ button:active{
     font-size: 16px;
 }
 
-#ask{
+#askBlock{
+    align-self: flex-end;
     margin-top: 5px;
+    margin-right: 17px;
 }
 
 #output{
@@ -226,23 +228,26 @@ button:active{
 }
 
 #newDataBlock{
+    align-self: flex-end;
     margin-top: 5px;
+    width: 177px;
 }
 
 #forNewData{
-    margin-left: 15%;
+    align-self: flex-end;
+    margin-left: 5px;
 }
 
-#newData{
+#newDataInput{
+    align-self: flex-end;
     background-color: #cdb78a;
     border: 1px #8f5d3a solid;
     color: #6a5d63;
+    margin-left: 5px;
 }
 
 #sendButton{
-    align-self: center;
     margin-top: 5px;
-    margin-left: 17%;
     width: 160px;
 }
 
@@ -339,7 +344,7 @@ button:active{
 }
 /*-----------------------------------------*/
 #testsBlock{
-    height: 340px;
+    height: 350px;
     font-size: 18px;
 }
 
@@ -362,7 +367,7 @@ button:active{
     margin-top: 5px;
     margin-left: 5px;
     width: 170px;
-    height: 75px;
+    height: 85px;
     border: 3px #8f5d3a dotted;
 }
 
@@ -401,6 +406,17 @@ button:active{
 #addTestButton:active{
     outline: none;
     box-shadow: 0 0 20px 2px #6a5d63;
+}
+
+#addTestText{
+    align-self: flex-end;
+    margin-right: 10px;
+    margin-top: 2px;
+    font-size: 14px;
+}
+
+#testsQuantityText{
+    display: inline-block;
 }
 
 #downloadTestsButton{
@@ -509,7 +525,7 @@ button:active{
     box-shadow: 0 0 20px 2px #6a5d63;
 }
 
-#learningState{
+#learningStateText{
     align-self: flex-end;
     margin-right: 10px;
     margin-top: 2px;
@@ -568,7 +584,7 @@ button:active{
     box-shadow: 0 0 10px 3px #6a5d63;
 }
 
-#whatAreTheWeightsBlock, #whatAreTheTestsBlock{
+#whatAreTheWeightsBlock, #whatAreTheTestsBlock, #keyboardInfoBlock{
     width: 224px;
     padding: 3px;
     background-color: #64423c;
@@ -586,7 +602,7 @@ button:active{
 }
 
 /*-------------------------------------------------*/
-#whatAreTheWeightsButton, #whatAreTheTestsButton{
+#whatAreTheWeightsButton, #whatAreTheTestsButton, #keyboardInfoButton{
     align-self: center;
     width: 230px;
     height: 30px;
@@ -608,7 +624,12 @@ button:active{
 
 #whatAreTheTestsButton{
     border-top: 1px #6a5d63 solid;
-    border-bottom: 2px #6a5d63 solid;
+    border-bottom: 1px #6a5d63 solid;
+}
+
+#keyboardInfoButton {
+    border-top: 1px #6a5d63 solid;
+    border-bottom: 1px #6a5d63 solid;
 }
 
 /*------------------Drawing Area-------------------*/
