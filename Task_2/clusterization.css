@@ -7,7 +7,7 @@ body {
 }
 
 #samples_field {
-    border: 5px solid #87eb58;
+    border: 5px solid white;
     position: relative;
 }
 
@@ -20,6 +20,7 @@ body {
 }
 
 #leftPanel {
+    display: inline-block;
     position: relative;
     flex-direction: column;
     justify-content: space-between;
@@ -29,7 +30,7 @@ body {
     margin-right: 0;
     max-height: 1000px;
     height: 98vh;
-    width: 20vw;
+    width: 25%;
     /*position: absolute;*/
     flex: 50% 50% 0%;
     background-color: #358d6ed7;
@@ -79,7 +80,6 @@ body {
 }
 
 .metric {
-    display: inline-block;
     margin: auto;
     font-weight: bold;
     font-size: 30px;
@@ -87,23 +87,26 @@ body {
 }
 
 .line {
-    display: inline-block;
-    margin-bottom: 20px;
     background: rgb(50, 199, 236);
     width: 50px;
     height: 5px;
+    margin-top: 22px;
 }
 
 .metric_block {
-    background-color: transparent;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
 }
 
+.chebyshev_div {
+    display: flex;
+    flex-direction: row;
+}
+
 .all_metrics {
-    padding: 1em;
+    padding: 2em;
     background-color: transparent;
     display: flex;
     flex-direction: row;
