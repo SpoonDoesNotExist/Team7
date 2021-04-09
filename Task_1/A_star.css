@@ -292,14 +292,14 @@ body {
 
 .start {
     color: #393E46;
-    background-color: #042f28;
-    border: 2px solid #042f28;
+    background-color: #bc7837;
+    border: 2px solid #bc7837;
 }
 
 .finish {
     color: #393E46;
-    background-color: #3f0d16;
-    border: 2px solid #3f0d16;
+    background-color: #4b0e19;
+    border: 2px solid #4b0e19;
 }
 
 .wall {
