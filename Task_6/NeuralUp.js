@@ -237,19 +237,23 @@ function changePixelState(pixel) {
     pixelsValues[pixel.id] = currentValue;
 }
 
-function drawingParametres(){
-    this.lineWidht = lineWidhtInput.value - 1
+let lineWidht = lineWidhtInput.value - 1;
+let drawFactor = 0.7*Math.atan(lineWidht - 1)/(Math.PI) + 1;
+
+lineWidhtInput.onchange = function(){
+    lineWidht = lineWidhtInput.value - 1;
+    drawFactor = 0.7*Math.atan(lineWidht - 1)/(Math.PI) + 1;
 }
 
 function changePixels(pixel){
     if (!isMousedown) return;  
     let thisPixel = pixel.id;
-    let lineWidht = lineWidhtInput.value - 1;
 
     for(let diffAbs = 0; diffAbs <= lineWidht; diffAbs++){
-        for(let diffLeft = 0; diffLeft <= diffAbs && diffLeft <= lineWidht/(Math.sqrt(lineWidht-1)+1); diffLeft++){
+        for(let diffLeft = 0; diffLeft <= diffAbs && diffLeft <= lineWidht/drawFactor; diffLeft++){
+
             let diffUp = diffAbs - diffLeft;
-            if (diffUp > lineWidht/(Math.sqrt(lineWidht-1)+1)){
+            if (diffUp > lineWidht/drawFactor){
                 continue;
             }
 
@@ -557,3 +561,16 @@ newDataInput.oninput = function() {
     newDataInput.value = newDataInput.value.slice(0, newDataInput.maxLength);
 }
 
+testsInput.oninput = function() {
+    testsInput.value = testsInput.value.slice(0, testsInput.maxLength);
+}
+
+megaLearnInput.oninput = function() {
+    if(megaLearnInput.value > 100){
+        megaLearnInput.style.borderColor = "#c40000";
+        megaLearnInput.style.color = "#c40000";
+    }
+    else{
+        megaLearnInput.style = null;
+    }
+}
