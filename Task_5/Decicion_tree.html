@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <title>DecicionTree</title>
+    <link rel="stylesheet" href="decicion_tree.css">
+</head>
+
+<body>
+
+    <aside id='leftPanel'>
+        <div class="form-group">
+            <input type="file" id="fileInput" class="input_samples_field" accept=".csv" required />
+            <br>
+            <label class="cv_label" for="CV_fold">CV fold</label>
+            <input class="input" type="number" maxlength="2" id="CV_fold" min="1" max="10" value="1"><br>
+            <button id="submitFileInput" class="submit_file button">Submit</a>
+        </div>
+        <div class="hyperparameters-group">
+            <label class="label" for="max_depth" id='max_depth_label'>Max depth</label>
+            <input class="input" type="number" maxlength="2" id="max_depth" min="1" max="20" value="4"><br>
+            <label class="label" for="min_size" id='min_size_label'>Min size</label>
+            <input class="input" type="number" maxlength="2" id="min_size" min="1" max="20" value="4"><br>
+            <button id="hyperparameters_button" class="button">Применить</button>
+        </div>
+        <button id="learnButton" class="learn button">Learn</button><br>
+        <div class="form-group">
+            <input type="file" id="fileInput_prediction" class="input_samples_field" accept=".csv" required />
+            <br>
+            <button id="predictButton" class="predict button">Predict</button><br>
+        </div>
+    </aside>
+
+    <div class="display-tree">
+        <div class="tree_block">
+            <ul id='tree_diag' class="tree"></ul>
+        </div>
+        <ul id='testing_results'></ul>
+    </div>
+
+    <script src="./papaparse.min.js"></script>
+    <script src="decicion_tree.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</body>
+
+</html>
