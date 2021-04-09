@@ -10,7 +10,6 @@ body {
     position: relative;
     color: #ffffff;
     background-color: transparent;
-    width: 90%;
     height: auto;
 }
 
@@ -47,13 +46,16 @@ body {
     font-size: 30px;
 }
 
+#hyperparameters_button {
+    width: 150px;
+    height: auto;
+}
+
 .hyperparameters-group {
     width: 100%;
     height: 100%;
-    padding: 1.2em;
     text-align: center;
     font-size: 28px;
-    flex: auto;
 }
 
 .form-group {

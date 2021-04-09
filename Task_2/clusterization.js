@@ -249,10 +249,10 @@ class Field {
         let CE_delta = Infinity;
 
         this.DrawClusters();
-        await sleep(300);
+        await sleep(150);
 
         while (CE_delta > this.eps) {
-            await sleep(300);
+            await sleep(150);
             this.DistributePoints();
 
             CE_delta = this.clusterizationError() - CE;
@@ -278,8 +278,6 @@ class Field {
         let iter = 0;
         for (let c of this.clusters) {
 
-            //let drawingStyle = drawingStyleMap.get(style);
-
             let x = c.center.coordinate[0];
             let y = c.center.coordinate[1];
             for (let point of c.elements.values()) {
@@ -287,23 +285,7 @@ class Field {
                 let posy = point.coordinate[1];
 
                 drawingStyleMap.get(style)(posx, posy, x, y, this.colorMap.get(iter));
-
-                /*
-                context.fillStyle = this.colorMap.get(iter);
-                context.beginPath();
-                context.arc(posx, posy, circleSize, 0, 2 * Math.PI);
-                context.fill();
-
-                if (drawLines) {
-                    context.moveTo(posx, posy);
-                    context.lineTo(x, y);
-                    context.strokeStyle = this.colorMap.get(iter);
-                    context.stroke();
-                }*/
             }
-
-            console.log(this.colorMap.get(iter));
-
             iter++;
         }
     }
