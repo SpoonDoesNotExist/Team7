@@ -1,0 +1,282 @@
+body {
+    background-color: #9fc2b8;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.label {
+    position: relative;
+    color: #ffffff;
+    background-color: transparent;
+    height: auto;
+}
+
+.cv_label {
+    position: relative;
+    color: #ffffff;
+    background-color: transparent;
+    width: auto;
+}
+
+.uploadLabel {
+    z-index: 1;
+    width: 90px;
+    height: 90px;
+    color: #c53535;
+    background-color: #0edba1;
+    border-radius: 30px;
+}
+
+.input {
+    flex: auto;
+    width: 40px;
+    height: auto;
+}
+
+.result_li {
+    margin: 1em;
+    background-color: #0edba1;
+}
+
+#testing_results {
+    margin-top: 2.3em;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+#hyperparameters_button {
+    width: 150px;
+    height: auto;
+}
+
+.hyperparameters-group {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 28px;
+}
+
+.form-group {
+    display: inline;
+    width: 93%;
+    border: 3px dashed rgb(214, 204, 204);
+    padding: 1.2em;
+    text-align: center;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 18px;
+}
+
+.input_samples_field {
+    width: 100%;
+    background-color: transparent;
+    color: white;
+}
+
+.button {
+    flex: auto;
+    height: auto;
+    width: auto;
+    font-weight: bold;
+    color: #000000;
+    background-color: #e2a137c2;
+    border-radius: 14px;
+    font-size: 22px;
+    border: none;
+    margin: 10px;
+}
+
+.button:hover {
+    outline: none;
+    border: 3px solid #ffffff;
+}
+
+.button:focus {
+    outline: none;
+}
+
+.button:active {
+    animation: anim-shadow2 4.9s forwards;
+    border: 6px solid #00ff88;
+}
+
+@keyframes anim-shadow2 {
+    0% {
+        box-shadow: 0px 0px 50px 20px #0a0eda;
+    }
+}
+
+.learn {
+    position: relative;
+    width: 90%;
+    height: 30%;
+}
+
+.predict {
+    position: relative;
+    width: 90%;
+    height: 50%;
+}
+
+#tableDiv {
+    flex: auto;
+}
+
+.sampleFeature {
+    margin: 3em;
+    padding: 2em;
+    border: 1px solid #EEEEEE;
+    background-color: #a49582;
+    position: relative;
+    min-width: 45px;
+    min-height: 45px;
+    max-width: 150px;
+    max-height: 70px;
+    cursor: pointer;
+}
+
+.sampleFeature:hover {
+    background-color: #dd8511;
+    border: 3px solid #553333;
+    box-shadow: 0 0 10px 2.5px #EEEEEE inset;
+}
+
+#leftPanel {
+    display: flex;
+    max-height: 350vh;
+    height: 100vh;
+    width: 15vmax;
+    position: fixed;
+    z-index: 1;
+    background-color: #222831;
+    border-right: solid 4px #EEEEEE;
+    flex-shrink: 1;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 0;
+}
+
+body {
+    font-family: Calibri, Segoe, "Segoe UI", "Gill Sans", "Gill Sans MT", sans-serif;
+}
+
+.display-tree {
+    margin-left: 15vmax;
+    position: relative;
+    z-index: 0;
+    display: block;
+    direction: column;
+}
+
+.tree_block {
+    margin-left: 0%;
+}
+
+
+/* It's supposed to look like a tree diagram */
+
+.tree,
+.tree ul,
+.tree li {
+    list-style: none;
+    margin-left: 0;
+    padding: 0;
+    position: relative;
+}
+
+.tree {
+    margin: 0 0 0em;
+    text-align: center;
+}
+
+.tree,
+.tree ul {
+    display: table;
+}
+
+.tree ul {
+    width: 100%;
+}
+
+.tree li {
+    display: table-cell;
+    padding: .5em 0em;
+    vertical-align: top;
+}
+
+
+/* _________ */
+
+.tree li:before {
+    outline: solid 1px #000000;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.tree li:first-child:before {
+    left: 50%;
+}
+
+.tree li:last-child:before {
+    right: 50%;
+}
+
+.tree code,
+.tree span {
+    background-color: #aa6666;
+    border: solid .1em #000000;
+    border-radius: .5em;
+    display: inline-block;
+    margin: 0 .2em .5em;
+    padding: 1em 2em;
+    min-width: max-content;
+    min-height: max-content;
+    position: relative;
+}
+
+
+/* If the tree represents DOM structure */
+
+.tree code {
+    font-family: monaco, Consolas, 'Lucida Console', monospace;
+}
+
+
+/* | */
+
+.tree ul:before,
+.tree code:before,
+.tree span:before {
+    outline: solid 1px #000000;
+    content: "";
+    height: .5em;
+    left: 50%;
+    position: absolute;
+}
+
+.tree ul:before {
+    top: -.5em;
+}
+
+.tree code:before,
+.tree span:before {
+    top: -.55em;
+}
+
+
+/* The root node doesn't connect upwards */
+
+.tree>li {
+    margin-top: 0;
+}
+
+.tree>li:before,
+.tree>li:after,
+.tree>li>code:before,
+.tree>li>span:before {
+    outline: none;
+}
