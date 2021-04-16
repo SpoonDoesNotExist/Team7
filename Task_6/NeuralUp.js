@@ -1,14 +1,14 @@
-//------------------Ожидание---------------------------------------
+//------------------Waiting---------------------------------------
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-//------------------Функции, используемые программой--------------------------
+//------------------Main Functions-------------------------------
 function sigmoid(x) {
     return 1 / (1 + Math.exp(-x));
 }
 
-function sigmoidDerivative(sigmoidX) { //производная берётся не по x, а по y = sigmoid(x)
+function sigmoidDerivative(sigmoidX) { //!!!!through sigmoid(x)
     return sigmoidX * (1 - sigmoidX);
 }
 
@@ -34,7 +34,7 @@ function getNumberOfMax(arr) {
     return maxNum;
 }
 
-//----------------Веса нейронной сети-------------------
+//----------------Parameters of NeuralNetwork [constructor]-----------
 function beginWeight() {
     return Math.random()/50;
 }
@@ -60,7 +60,7 @@ function NeuralParameters(quantityOfLayers, quantityInLayer, learnFactor) {
     }
 }
 
-//--------------Конструктор нейронной сети-----------
+//--------------Layers calculator----------------------
 function NeuralNetwork(NNpar, beginLayer) {
     this.layer = [];
     this.voided = [];
@@ -89,8 +89,8 @@ function NeuralNetwork(NNpar, beginLayer) {
     }
 }
 
-//--------------------Обучение----------------------
-function NeuralDerivs(NN, NNpar) { //частные производные по значениям нейронов
+//--------------------Learning functions----------------------
+function NeuralDerivs(NN, NNpar) { //partial derivates of neurons
     this.layerDerivate = [];
 
     this.layerDerivate[NN.end] = [];
@@ -128,7 +128,7 @@ function learnNeuralNetwork(NN, NNpar, NNder) {
 
 
 
-//-----------Нейросеть на текущей странице--------------
+//-----------Current Network parameters-----------------------
 const learnFactor = 0.05;
 const pxQuan = 50;
 const quantityOfLayers = 4;
@@ -137,16 +137,38 @@ const neuronsInLayers = [pxQuan ** 2, 100, 20, 10];
 let networkParameters = new NeuralParameters(quantityOfLayers, neuronsInLayers, learnFactor);
 let currentNetwork;
 
+//----------------Global parameters----------------------------
+let currentColor = "black";
+let currentValue = 1;
 
+let isMousedown = false;
+let unsavedWeights = false;
+let unsavedTests = false;
 
-//----------------Все элементы левого меню------------------------
+let pixelsValues = [];
+for (let i = 0; i < pxQuan; i++) {
+    for (let j = 0; j < pxQuan; j++) {
+        pixelsValues[i * pxQuan + j] = 0;
+    }
+}
+
+//---------------Update layers of Network-----------------------
+currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
+
+async function updateNetwork() {
+    currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
+    output.innerHTML = currentNetwork.getBest();
+}
+
+let regularChangeNetwork = setInterval(updateNetwork, 500);
+
+//----------------Elements of leftPanel------------------------
 let whiteButton = document.getElementById("whiteButton");
 let blackButton = document.getElementById("blackButton");
 let currentColorShow = document.getElementById('currentColorShow');
 let lineWidhtInput = document.getElementById('lineWidhtInput');
 let allPaintButton = document.getElementById("allPaintButton");
 
-let readPictureButton = document.getElementById("readPictureButton");
 let askBlock = document.getElementById('askBlock');
 let output = document.getElementById('output');
 let yesButton = document.getElementById("yesButton");
@@ -174,54 +196,7 @@ let testsFileName = document.getElementById('testsFileName');
 let megaLearnStartButton = document.getElementById('megaLearnStartButton');
 let learningStateText = document.getElementById('learningStateText');
 
-//------------------Кнопки управления цветом------------
-let currentColor = "black";
-let currentValue = 1;
-
-whiteButton.onclick = function () {
-    currentColor = "white";
-    currentValue = 0;
-    currentColorShow.innerText = "белый";
-    currentColorShow.className = "currentColorShow twhite";
-}
-
-blackButton.onclick = function () {
-    currentColor = "black";
-    currentValue = 1;
-    currentColorShow.innerText = "чёрный";
-    currentColorShow.className = "currentColorShow tblack";
-}
-
-//---------Константы поля, обновление слоёв нейросети-------
-const size = 600;
-
-let pixelsValues = [];
-
-for (let i = 0; i < pxQuan; i++) {
-    for (let j = 0; j < pxQuan; j++) {
-        pixelsValues[i * pxQuan + j] = 0;
-    }
-}
-
-currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
-
-async function updateNetwork() {
-    currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
-    output.innerHTML = currentNetwork.getBest();
-}
-
-let regularChangeNetwork = setInterval(updateNetwork, 500);
-
-
-let drawingArea = document.getElementById("drawingArea");
-drawingArea.style.height = size + "px";
-drawingArea.style.width = size + "px";
-drawingArea.style.minWidth = size + "px";
-drawingArea.style.minHeight = size + "px";
-
-//----------изменение состояния пикселей-------------
-let isMousedown = false; //проверяет, было ли нажатие кнопки мыши на холсте
-
+//-------------Change pixels state------------------
 function doisMousedownTrue() {
     isMousedown = true;
 }
@@ -230,7 +205,7 @@ function doisMousedownFalse() {
     isMousedown = false;
 }
 
-document.body.onmouseup = doisMousedownFalse; //если мышку отпустили в любом месте body, отменить нажатие
+document.body.onmouseup = doisMousedownFalse;
 
 function changePixelState(pixel) {
     pixel.className = "pixel " + currentColor;
@@ -282,7 +257,16 @@ function changePixels(pixel){
     } 
 }
 
-//-------Генерация пискельного холста---------------------
+//-------------Field constants---------------------
+const size = 600;
+
+let drawingArea = document.getElementById("drawingArea");
+drawingArea.style.height = size + "px";
+drawingArea.style.width = size + "px";
+drawingArea.style.minWidth = size + "px";
+drawingArea.style.minHeight = size + "px";
+
+//--------------Field generation---------------------
 for (let i = 0; i < pxQuan; i++) {
     for (let j = 0; j < pxQuan; j++) {
         let pixel = document.createElement('div');
@@ -304,7 +288,21 @@ for (let i = 0; i < pxQuan; i++) {
     }
 }
 
-//------------------Кнопки полной закраски---------------
+//------------------Color buttons-----------------------
+whiteButton.onclick = function () {
+    currentColor = "white";
+    currentValue = 0;
+    currentColorShow.innerText = "белый";
+    currentColorShow.className = "currentColorShow twhite";
+}
+
+blackButton.onclick = function () {
+    currentColor = "black";
+    currentValue = 1;
+    currentColorShow.innerText = "чёрный";
+    currentColorShow.className = "currentColorShow tblack";
+}
+
 function paintAll() {
     for (let i = 0; i < pxQuan; i++) {
         for (let j = 0; j < pxQuan; j++) {
@@ -322,17 +320,10 @@ function paintAll() {
     }
 
 }
+
 allPaintButton.onclick = paintAll;
 
-
-//--------------Кнопки управления----------------
-/*readPictureButton.onclick = function(){
-    askBlock.hidden = false;
-    sanksText.hidden = true;
-    currentNetwork = new NeuralNetwork(networkParameters, pixelsValues);
-    output.innerHTML = currentNetwork.getBest();
-}*/
-
+//--------------Answer buttons----------------
 yesButton.onclick = async function () {
     sanksText.hidden = false;
     currentNetwork.setVoided(currentNetwork.getBest());
@@ -349,7 +340,6 @@ noButton.onclick = function () {
 }
 
 sendButton.onclick = async function () {
-    //askBlock.hidden = true;
     newDataBlock.hidden = true;
     sanksText.hidden = false;
     currentNetwork.setVoided(newDataInput.value);
@@ -360,7 +350,7 @@ sendButton.onclick = async function () {
     sanksText.hidden = true;
 }
 
-//------------------upload/download weights--------------
+//----------------upload/download weights--------------
 uploadButton.onchange = function () {
     let file = uploadButton.files[0];
     let reader = new FileReader;
@@ -377,9 +367,10 @@ downloadButton.onclick = function () {
     let file = new Blob([newjson], { type: 'application/json' });
     downloadButton.href = URL.createObjectURL(file);
     downloadButton.download = "weightsUp.json";
+    unsavedWeights = false;
 }
 
-//----------------Скачивание тестов-----------------------
+//----------------download tests-----------------------
 let testsArray = [];
 
 function createTestsArrayElement(pixels, figure) {
@@ -411,6 +402,7 @@ addTestButton.onclick = async function () {
     console.log(newElem);
     await sleep(1500);
     addTestText.hidden = true;
+    unsavedTests = true;
 }
 
 downloadTestsButton.onclick = function () {
@@ -418,6 +410,7 @@ downloadTestsButton.onclick = function () {
     let file = new Blob([newtxt], { type: 'application/json' });
     downloadTestsButton.href = URL.createObjectURL(file);
     downloadTestsButton.download = "testsUp.json";
+    unsavedTests = false;
 }
 
 uploadTestsButton.onchange = function () {
@@ -437,12 +430,14 @@ megaLearnStartButton.onclick = async function () {
     await sleep(100);
     for (let i = 0; i < megaLearnInput.value; i++) {
         megaLearning(testsArray, 30);
-        console.log(`Я сейчас на ${i+1} прогоне`);
+        await sleep(100);
+        learningStateText.innerText = `Я сейчас на ${i+1} прогоне`;
     }
     learningStateText.innerText = "Готово!"
+    unsavedWeights = true;
 }
 
-//---------------Таинственные исчезновения-----------
+//---------------pop-up menus-----------------
 function hideAll(blocks){
     for (let i = 0; i < blocks.length; i++){
         blocks[i].style.display = "none";
@@ -505,7 +500,7 @@ keyboardInfoButton.onclick = function () {
     hideInfo(keyboardInfoBlock);
 }
 
-//---------------Клавиатурные события-------------------
+//---------------Keyboard events-------------------
 function keyboardClick(key){
     switch(key){
         case "Space": 
@@ -551,8 +546,7 @@ document.body.onkeydown = function(){
     keyboardClick(event.code);
 }
 
-//----------ограничения на инпуты--------
-
+//------------------inputs limits-----------------------
 lineWidhtInput.oninput = function() {
     lineWidhtInput.value = lineWidhtInput.value.slice(0, lineWidhtInput.maxLength);
 }
@@ -572,5 +566,12 @@ megaLearnInput.oninput = function() {
     }
     else{
         megaLearnInput.style = null;
+    }
+}
+
+//-----------------beforeunload------------------------
+window.onbeforeunload = function() {
+    if (unsavedWeights||unsavedTests){
+        return false;
     }
 }

@@ -206,13 +206,6 @@ button:active{
     box-shadow: 0 0 10px 1px #6a5d63;
 }
 
-#readPictureButton{
-    margin-top: 10px;
-    width: 180px;
-    height: 30px;
-    font-size: 16px;
-}
-
 #askBlock{
     align-self: flex-end;
     margin-top: 5px;
