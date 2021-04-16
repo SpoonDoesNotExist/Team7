@@ -360,9 +360,9 @@ class DecicionTree {
 
         if (Object.keys(node).length > 3) {
             if (features.length == 0) {
-                span.innerText = `X${node['index'] + 1} < ${node['value']}   id=${node['id']}`;
+                span.innerText = `X${node['index'] + 1} < ${node['value']}`;
             } else {
-                span.innerText = `${features[node['index']]} < ${node['value']}    id=${node['id']}`;
+                span.innerText = `${features[node['index']]} < ${node['value']}`;
             }
 
             let ul = document.createElement('ul');
@@ -391,6 +391,8 @@ let max_depth = 4;
 let min_size = 4;
 let CV_fold = 1;
 
+let max_depth_input = document.getElementById("max_depth");
+let min_size_input = document.getElementById("min_size");
 
 function printTree(currTree) {
     currTree.treeDiagram.innerText = '';
@@ -464,6 +466,8 @@ function getAccuracy(pred, expect) {
 
 learnButton.onclick = async function() {
     CV_fold = CV_fold_input.value;
+    max_depth = max_depth_input.value;
+    min_size = min_size_input.value;
 
     doSleep = false;
 
@@ -542,7 +546,7 @@ function readTable(results) {
 
     for (i = 0; i < data.length; i++) {
         let row = [];
-        let cells = data[i].join(",").split(",")
+        let cells = data[i].join(",").split(",");
 
         for (j = 0; j < cells.length; j++)
             row.push(cells[j]);
@@ -713,17 +717,4 @@ submitFileInput.onclick = async function() {
     });
 
     console.log(`PapaParse over.`);
-}
-
-
-//Ввод гиперпараметров.
-let max_depth_input = document.getElementById("max_depth");
-let min_size_input = document.getElementById("min_size");
-let hyperparameters_button = document.getElementById("hyperparameters_button");
-hyperparameters_button.onclick = function() {
-
-    testingResults.innerText = '';
-
-    max_depth = max_depth_input.value;
-    min_size = min_size_input.value;
 }

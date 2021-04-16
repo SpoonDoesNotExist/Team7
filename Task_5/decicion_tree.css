@@ -97,14 +97,7 @@ body {
 }
 
 .button:active {
-    animation: anim-shadow2 4.9s forwards;
-    border: 6px solid #00ff88;
-}
-
-@keyframes anim-shadow2 {
-    0% {
-        box-shadow: 0px 0px 50px 20px #0a0eda;
-    }
+    background-color: #e2a0379d;
 }
 
 .learn {
