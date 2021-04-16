@@ -1,12 +1,71 @@
+*{
+    font-size: 18px;
+}
+
+button:focus{
+    outline: none;
+}
+
+a:link{
+    text-decoration: none;
+}
+
+a:visited{
+    text-decoration: none;
+}
+
 body {
     width: 100%;
     height: 100vh;
+    min-height: 900px;
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    background-color: #896635;
 }
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    height: 100%;
+    background-color: #dccf89;
+}
+
+.title {
+    font-size: 30px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.button {
+    background-color: #5a4343;
+    border: 1px #896635 solid;
+    color: #dccf89;
+    width: 250px;
+    height: 50px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.button:active{
+    box-shadow: 0 0 5px 1px #896635;
+}
+
+.toMain{
+    text-align: center;
+    line-height: 50px;
+    background-color: #dccf89;
+    color: #896635;
+}
+
+/*-----------------------------------------*/
 
 .canvases {
     position: relative;
@@ -19,6 +78,10 @@ body {
 }
 
 #canvas {
-    border: solid 2px brown;
-    background-color: #F07B3F;
+    background-color: #9c855d;
+}
+
+#rightPanel{
+    background-color: #896635;
+    width: 10px;
 }
