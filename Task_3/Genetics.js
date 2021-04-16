@@ -217,7 +217,7 @@ function showBestPath(bestBypass) {
 function mutationChance(child) {
 
     //Шанс на мутацию Хорошие значения: 5, 7, 9, 13, 15;
-    if (Math.random() <= 0.9) {
+    if (Math.random() <= 0.09) {
 
         // let repeats = getRandomIntInclusive(1, 1);
         // for (let j = 0; j < repeats; j++) {
