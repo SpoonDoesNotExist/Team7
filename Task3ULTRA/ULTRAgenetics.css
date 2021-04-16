@@ -18,7 +18,7 @@
     background-color: #212121;
 }
 
-button {
+button, a {
     margin: 5px;
     margin-bottom: 0px;
     height: 30px;
@@ -64,10 +64,21 @@ body {
 }
 
 #currentCodeInfo{
+    line-height: 50px;
     margin: 5px;
     text-align: center;
     background-color: #323232;
     color: #14FFEC;
+}
+
+#toMain{
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 205%;
+    background-color: #212121;
+    color:#0D7377;
+    border: 1px #0D7377 solid;
 }
 
 #codes{
@@ -91,4 +102,3 @@ body {
     border-right: 1px #0D7377 solid;
     overflow: auto;
 }
-
