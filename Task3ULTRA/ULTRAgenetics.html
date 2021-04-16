@@ -11,46 +11,47 @@
     <aside id = "leftPanel">
         <button id="startButton">Пуск</button>
         <button id="stopButton">Стоп</button>
-        <div id="currentCode">ААААА</div>
+        <pre id="currentCodeInfo">Ткните пуск, пожалуйста</pre>
     </aside>
     <div id = "codes">
         <pre id = "fromPerson">
 Код, написанный человеком [наверное]:
 
+
 const n = prompt();
-let a = null, b = null, c = null, d = null;
+let i = null, a = null, b = null, c = null;
 
-b = 0;
-c = 1;
-a = 2;
+a = 0;
+b = 1;
+i = 2;
 
-while(a &lt n){
-    a++;
-    b = b + c;
-
+while(i &lt n){
+    i++;
+    b = a + b;
+    a = b - a;
 }
 
-console.log(nextFib);
+console.log(b);
         </pre>
-        
+
         <pre id = "fromComputer">
 Код, написанный тоже человеком 
 [но скоро тут будет что-то интересненькое]:
 
 const n = prompt();
-let a = null, b = null, c = null, d = null;
+let i = null, a = null, b = null, c = null;
 
-b = 0;
-c = 1;
-a = 2;
+a = 0;
+b = 1;
+i = 2;
 
-while(a &lt n){
-    a++;
-    b = b + c;
-
+while(i &lt n){
+    i++;
+    b = a + b;
+    a = b - a;
 }
 
-console.log(nextFib);
+console.log(b);
         </pre>
     </div>
     <script src="ULTRAgenetics.js"></script>

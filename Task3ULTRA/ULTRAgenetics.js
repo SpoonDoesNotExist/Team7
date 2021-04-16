@@ -742,11 +742,13 @@ async function geneticAlgorithm(populationSize) {
     let bestProgramm = curGeneration[0];
     let noChanged = 0;
 
-    let currentCode = document.getElementById('currentCode');
-    currentCode.innerText = "Давайте приступим"
+    let currentCodeInfo = document.getElementById('currentCodeInfo');
+    let fromComputer = document.getElementById('fromComputer');
+
+    currentCodeInfo.innerText = "Давайте приступим"
     await sleep(100);
 
-    while (noChanged < 1 && bestProgramm.fitness > 0 && stopp == false) { //Было 100
+    while (noChanged < 100 && bestProgramm.fitness > 0 && stopp == false) { //Было 100
         curGeneration = getNextGeneration(curGeneration, populationSize, bestProgramm.fitness);
 
         if (curGeneration[0].fitness < bestProgramm.fitness) {
@@ -760,7 +762,8 @@ async function geneticAlgorithm(populationSize) {
             // }
         }
 
-        currentCode.innerText = `No changes: ${noChanged} Fitness: ${bestProgramm.fitness}`;
+        currentCodeInfo.innerText = `No changes: ${noChanged} Fitness: ${bestProgramm.fitness}`;
+        fromComputer.innerText = bestProgramm.outPut();
         await sleep(100);
         console.log(`No changes: ${noChanged} Fitness: ${bestProgramm.fitness}`);
     }
@@ -769,9 +772,10 @@ async function geneticAlgorithm(populationSize) {
     console.log(bestProgramm.fitness);
     console.log(bestProgramm.outPut());
 
-    let fromComputer = document.getElementById('fromComputer');
     fromComputer.innerText = bestProgramm.outPut();
-    currentCode.innerText = `${bestProgramm.genom}, ${bestProgramm.fitness}`;
+    currentCodeInfo.innerText = `Fitness: ${bestProgramm.fitness}`;
+
+    stopp = false;
 }
 
 let startButton = document.getElementById("startButton");
