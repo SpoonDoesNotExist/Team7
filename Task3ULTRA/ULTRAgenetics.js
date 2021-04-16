@@ -1,3 +1,8 @@
+//-----------------------waiting----------
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 //----------------------------CONSTRUCTOR-----------------------------------------------------------------
 class myWhile {
     type = 'while';
@@ -730,14 +735,18 @@ function getInitialGeneration(populationSize) {
 }
 
 let stopp = false;
-function geneticAlgorithm(populationSize) {
+async function geneticAlgorithm(populationSize) {
     let curGeneration = getInitialGeneration(populationSize);
     curGeneration.sort((a, b) => a.fitness - b.fitness);
 
     let bestProgramm = curGeneration[0];
     let noChanged = 0;
 
-    while (noChanged < 100 && bestProgramm.fitness > 0 && stopp == false) { //Было 100
+    let currentCode = document.getElementById('currentCode');
+    currentCode.innerText = "Давайте приступим"
+    await sleep(100);
+
+    while (noChanged < 1 && bestProgramm.fitness > 0 && stopp == false) { //Было 100
         curGeneration = getNextGeneration(curGeneration, populationSize, bestProgramm.fitness);
 
         if (curGeneration[0].fitness < bestProgramm.fitness) {
@@ -750,12 +759,19 @@ function geneticAlgorithm(populationSize) {
             //     mutation += 0.001;
             // }
         }
+
+        currentCode.innerText = `No changes: ${noChanged} Fitness: ${bestProgramm.fitness}`;
+        await sleep(100);
         console.log(`No changes: ${noChanged} Fitness: ${bestProgramm.fitness}`);
     }
 
     console.log(bestProgramm.genom);
     console.log(bestProgramm.fitness);
     console.log(bestProgramm.outPut());
+
+    let fromComputer = document.getElementById('fromComputer');
+    fromComputer.innerText = bestProgramm.outPut();
+    currentCode.innerText = `${bestProgramm.genom}, ${bestProgramm.fitness}`;
 }
 
 let startButton = document.getElementById("startButton");

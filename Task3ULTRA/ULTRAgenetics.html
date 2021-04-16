@@ -4,11 +4,55 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTRA</title>
+    <link rel="stylesheet" href="ULTRAgenetics.css">
+    <title>ULTRAgenetics</title>
 </head>
 <body>
-    <button id="startButton">Пуск</button>
-    <button id="stopButton">Стоп</button>
+    <aside id = "leftPanel">
+        <button id="startButton">Пуск</button>
+        <button id="stopButton">Стоп</button>
+        <div id="currentCode">ААААА</div>
+    </aside>
+    <div id = "codes">
+        <pre id = "fromPerson">
+Код, написанный человеком [наверное]:
+
+const n = prompt();
+let a = null, b = null, c = null, d = null;
+
+b = 0;
+c = 1;
+a = 2;
+
+while(a &lt n){
+    a++;
+    b = b + c;
+
+}
+
+console.log(nextFib);
+        </pre>
+        
+        <pre id = "fromComputer">
+Код, написанный тоже человеком 
+[но скоро тут будет что-то интересненькое]:
+
+const n = prompt();
+let a = null, b = null, c = null, d = null;
+
+b = 0;
+c = 1;
+a = 2;
+
+while(a &lt n){
+    a++;
+    b = b + c;
+
+}
+
+console.log(nextFib);
+        </pre>
+    </div>
     <script src="ULTRAgenetics.js"></script>
 </body>
 </html>
