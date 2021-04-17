@@ -1,29 +1,31 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext('2d');
 
-let field = new Array(canvas.height / 20);
-field.fill(0);
+let antCanvas = document.getElementById("antCanvas");
+let antCtx = antCanvas.getContext('2d');
+
+const scale = 20;
+
+let field = new Array(canvas.height / scale);
 for (let i = 0; i < field.length; i++) {
-    field[i] = new Array(canvas.width / 20);
+    field[i] = new Array(canvas.width / scale);
     field[i].fill(0);
 }
 
-let setNest = false;
-
-function clearRect(x, y) {
-    ctx.clearRect(x * 20, y * 20, 20, 20);
+function clearRect(needCtx, cords) {
+    needCtx.clearRect(cords.x * scale, cords.y * scale, scale, scale);
 }
 
-function setRect(x, y) {
-    ctx.fillRect(x * 20, y * 20, 20, 20);
+function setRect(needCtx, cords) {
+    needCtx.fillRect(cords.x * scale, cords.y * scale, scale, scale);
 }
 
 //----------------MAZE(CAVE)----------------------------------------------------------------------------
 
-let aliveChance = 0.35;
-let deathLimit = 3;
-let birthLimit = 4;
-let stepsCount = 10;
+const aliveChance = 0.35;
+const deathLimit = 3;
+const birthLimit = 4;
+const stepsCount = 10;
 
 function countAliveNeighbours(cave, x, y) {
     let aliveCount = 0;
@@ -58,11 +60,6 @@ function doSimulationStep(cave) {
         for (let j = 0; j < cave[i].length; j++) {
             let wallCount = countAliveNeighbours(cave, j, i);
             if (cave[i][j] == true) {
-                // if (aliveCount < 2 || aliveCount > 3) {
-                //     newCave[i][j] = false;
-                // } else {
-                //     newCave[i][j] = cave[i][j];
-                // }
                 if (wallCount < deathLimit) {
                     newCave[i][j] = false;
                 } else {
@@ -70,11 +67,6 @@ function doSimulationStep(cave) {
                 }
 
             } else {
-                // if (aliveCount == 3) {
-                //     newCave[i][j] = true;
-                // } else {
-                //     newCave[i][j] = cave[i][j];
-                // }
                 if (wallCount > birthLimit) {
                     newCave[i][j] = true;
                 } else {
@@ -88,22 +80,15 @@ function doSimulationStep(cave) {
 
 function initializeCave() {
 
-    let cave = new Array(canvas.height / 20);
+    let cave = new Array(canvas.height / scale);
     for (let i = 0; i < cave.length; i++) {
-        cave[i] = new Array(canvas.width / 20);
+        cave[i] = new Array(canvas.width / scale);
         cave[i].fill(false);
 
         for (let j = 0; j < cave[i].length; j++) {
             if (Math.random() < aliveChance) {
                 cave[i][j] = true;
             }
-
-            // if (cave[i][j] == true) {
-            //     ctx.fillStyle = 'black';
-            // } else {
-            //     ctx.fillStyle = 'blue';
-            // }
-            // setRect(j, i);
         }
     }
 
@@ -121,17 +106,17 @@ function generateCave() {
 
 //------------------------NEST-------------------------------------------------------------------------
 function drawNest(nest) {
-    ctx.fillStyle = '#393232';
+    ctx.fillStyle = '#5a4343';
     for (let i = 0; i < nest.length; i++) {
-        setRect(nest[i].x, nest[i].y);
+        setRect(ctx, nest[i]);
         field[nest[i].y][nest[i].x] = 'nest';
     }
 }
 
 function clearNest(nest) {
-    ctx.fillStyle = '#F07B3F';
+    ctx.fillStyle = '#9c855d';
     for (let i = 0; i < nest.length; i++) {
-        setRect(nest[i].x, nest[i].y);
+        setRect(ctx, nest[i]);
         field[nest[i].y][nest[i].x] = 0;
     }
     return [];
@@ -167,7 +152,7 @@ function placeNest(x, y) {
 function drawFood(curFood) {
     ctx.fillStyle = '#F73859';
     for (let i = 0; i < curFood.length; i++) {
-        setRect(curFood[i].x, curFood[i].y);
+        setRect(ctx, curFood[i]);
         field[curFood[i].y][curFood[i].x] = 'food';
     }
 }
@@ -203,7 +188,7 @@ function placeFood(x, y) {
 function drawWater(curWater) {
     ctx.fillStyle = '#3490DE';
     for (let i = 0; i < curWater.length; i++) {
-        setRect(curWater[i].x, curWater[i].y);
+        setRect(ctx, curWater[i]);
         field[curWater[i].y][curWater[i].x] = 'water';
     }
 }
@@ -233,61 +218,110 @@ function placeWater(x, y) {
 }
 //------------------------------------------------------------------------------------------------------
 
-//----------CLASSES----------------------------------------------------------------------------------------
+//------------------CLASSES-------------------------------------------------------------------------------------------
+
+//--------------PHEROMONE------------------------------------------------------------------------------------------------
+const maxPheromoneOnPath = 300;
+const reduceQuotient = 0.99;
+const maxValue = 7;
+
+class cell {
+    constructor(cords, length, value, next, prev) {
+
+        this.reversedLength = null;
+        this.length = length;
+        this.cords = cords;
+
+        this.value = value / reduceQuotient;
+        if (this.value > maxValue) {
+            this.value = maxValue / reduceQuotient;
+        }
+
+        this.prev = prev;
+
+        this.next = [];
+        if (next != null) {
+            this.next.push(next);
+        }
+    }
+
+    updateValue(value) {
+        if (value == -1) {
+            this.value = 0;
+        } else {
+            this.value += value / reduceQuotient;
+            if (this.value > maxValue) {
+                this.value = maxValue / reduceQuotient;
+            }
+        }
+    }
+
+    static includes(curValue, index, arr) {
+        if (curValue.x == this.x && curValue.y == this.y) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    getPrev() {
+        return this.prev;
+    }
+
+    setPrev(prev) {
+        this.prev = prev;
+    }
+
+    getNext() {
+        if (this.next.length > 0) {
+            this.next.sort((a, b) => field[b.y][b.x].value - field[a.y][a.x].value);
+            return this.next[getRandomIntInclusive(0, this.next.length/2)];
+        }
+        return null;
+    }
+
+    setNext(next) {
+        this.next.push(next);
+    }
+
+    deleteNext(next) {
+        for (let i = 0; i < this.next.length; i++) {
+            if (next.x == this.next[i].x && next.y == this.next[i].y) {
+                this.next.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    tick() {
+        this.value *= reduceQuotient;
+        let opacity = this.value / maxValue;
+
+        ctx.fillStyle = `rgba(167, 255, 131, ${opacity})`;
+        clearRect(ctx, this.cords);
+        setRect(ctx, this.cords);
+    }
+};
+
+//----------HUNTERANTS---------------------------------------------------------------------------------------------------------
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// const movement = new Map([
-//     ['left', {
-//         xi: -1,
-//         yi: 0
-//     }],
-//     ['up', {
-//         xi: 0,
-//         yi: -1
-//     }],
-//     ['right', {
-//         xi: 1,
-//         yi: 0
-//     }],
-//     ['down', {
-//         xi: 0,
-//         yi: 1
-//     }],
-//     ['left-up', {
-//         xi: -1,
-//         yi: -1
-//     }],
-//     ['right-up', {
-//         xi: 1,
-//         yi: -1
-//     }],
-//     ['right-down', {
-//         xi: 1,
-//         yi: 1
-//     }],
-//     ['left-down', {
-//         xi: -1,
-//         yi: 1
-//     }],
-// ]);
-
 class hunterAnt {
     constructor() {
         this.cords = nest[getRandomIntInclusive(0, nest.length - 1)];
         this.prevMove = 'none';
-        this.path = [];
-        this.path.push(this.cords);
+        this.length = 0;
         this.back = false;
     }
 
-    static movement = Object.freeze([{xi: -1, yi: -1}, {xi: 0, yi: -1}, {xi: 1, yi: -1}, {xi: 1, yi: 0},
-                                {xi: 1, yi: 1}, {xi: 0, yi: 1}, {xi: -1, yi: 1}, {xi: -1, yi: 0}]);
+    static movement = Object.freeze([{ xi: -1, yi: -1 }, { xi: 0, yi: -1 }, { xi: 1, yi: -1 }, { xi: 1, yi: 0 },
+    { xi: 1, yi: 1 }, { xi: 0, yi: 1 }, { xi: -1, yi: 1 }, { xi: -1, yi: 0 }]);
 
-    goAhead() {
+    getDirection() {
         let availableNow = [];
         for (let i = 0; i <= 7; i++) {
 
@@ -307,7 +341,7 @@ class hunterAnt {
             let newY = this.cords.y + hunterAnt.movement[i].yi;
 
             if (0 <= newX && newX < field[0].length
-             && 0 <= newY && newY < field.length) {
+                && 0 <= newY && newY < field.length) {
 
                 if (field[newY][newX] == 'food' || field[newY][newX] == 'water') {
                     availableNow = [];
@@ -316,49 +350,61 @@ class hunterAnt {
 
                 } else if (field[newY][newX] != 'wall') {
                     availableNow.push(i);
-                }    
+                }
             }
         }
 
         if (availableNow.length == 0) {
             availableNow.push((this.prevMove + 4) % 8);
         }
-        let curKey = availableNow[getRandomIntInclusive(0, availableNow.length - 1)];
+        return availableNow[getRandomIntInclusive(0, availableNow.length - 1)];
+    }
+
+    goAhead() {
+        let curKey = this.getDirection();
 
         let newX = this.cords.x + hunterAnt.movement[curKey].xi;
         let newY = this.cords.y + hunterAnt.movement[curKey].yi;
 
         this.prevCords = this.cords;
         this.cords = {
-            x:newX,
-            y:newY
+            x: newX,
+            y: newY
         };
 
-        this.path.push(this.cords);
         this.prevMove = curKey;
+        this.length++;
+
+        if (field[this.cords.y][this.cords.x] == 'nest') {
+            this.length = 0;
+        }
 
         if (field[this.cords.y][this.cords.x] == 'water'
             || field[this.cords.y][this.cords.x] == 'food') {
 
-            this.back = true;
             this.prevMove = 'none';
+            this.back = true;
+            this.length--;
 
-            this.path.pop();
-            this.prevCords = this.path.pop();
-            this.cords = this.path.pop();
+            field[this.prevCords.y][this.prevCords.x].updateValue(maxPheromoneOnPath / this.length);
+            field[this.prevCords.y][this.prevCords.x].setNext(this.cords);
+
+            this.cords = field[this.prevCords.y][this.prevCords.x].getPrev();
+
         }
     }
 
     goBack() {
-        if (this.path.length > 0) {
+        if (field[this.cords.y][this.cords.x] instanceof cell) {
             this.prevCords = this.cords;
-            this.cords = this.path.pop();
+            this.cords = field[this.cords.y][this.cords.x].getPrev();
         } else {
+            this.length = 0;
             this.back = false;
         }
     }
 
-    includes(curValue, index, arr) {
+    static includes(curValue, index, arr) {
         if (curValue.x == this.x && curValue.y == this.y) {
             return true;
         } else {
@@ -367,18 +413,31 @@ class hunterAnt {
     }
 
     drawAnt() {
-        if (nest.some(this.includes, this.prevCords) == false) {
-            if (this.back == false) {
-                ctx.fillStyle = '#F07B3F';
-            } else {
-                ctx.fillStyle = '#9DF3C4';
-            }
-            setRect(this.prevCords.x, this.prevCords.y);
+        if (field[this.prevCords.y][this.prevCords.x] != 'nest') {
+            clearRect(antCtx, this.prevCords);
         }
 
-        if (nest.some(this.includes, this.cords) == false) {
-            ctx.fillStyle = '#6A2C70';
-            setRect(this.cords.x, this.cords.y);
+        if (field[this.cords.y][this.cords.x] != 'nest') {
+
+            if (this.back == false) {
+                if ((field[this.cords.y][this.cords.x] instanceof cell) == false) {
+
+                    field[this.cords.y][this.cords.x] = new cell(this.cords, this.length, 0, null, this.prevCords);
+                } else {
+                    if (field[this.cords.y][this.cords.x].length > this.length) {
+                        field[this.cords.y][this.cords.x].setPrev(this.prevCords);
+                        field[this.cords.y][this.cords.x].length = this.length;
+                    } else {
+                        this.length = field[this.cords.y][this.cords.x].length;
+                    }
+                }
+            } else {
+                field[this.cords.y][this.cords.x].updateValue(maxPheromoneOnPath / this.length);
+                field[this.cords.y][this.cords.x].setNext(this.prevCords);
+            }
+
+            antCtx.fillStyle = '#6A2C70';
+            setRect(antCtx, this.cords);
         }
     }
 
@@ -388,32 +447,195 @@ class hunterAnt {
         } else {
             this.goBack();
         }
-        //console.log('move');
         this.drawAnt();
     }
-}
+};
+
+//-----------PLODDERS-----------------------------------------------------------------------------------------------------------
+class plodderAnt {
+    constructor() {
+        this.cords = nest[getRandomIntInclusive(0, nest.length - 1)];
+        this.prevCords;
+        this.length = 0;
+        this.back = false;
+    }
+
+    static movement = Object.freeze([{ xi: -1, yi: -1 }, { xi: 0, yi: -1 }, { xi: 1, yi: -1 }, { xi: 1, yi: 0 },
+    { xi: 1, yi: 1 }, { xi: 0, yi: 1 }, { xi: -1, yi: 1 }, { xi: -1, yi: 0 }]);
+
+    getDirection() {
+        let availableNow = [];
+        for (const move of plodderAnt.movement) {
+            let newX = this.cords.x + move.xi;
+            let newY = this.cords.y + move.yi;
+
+            if (0 <= newX && newX < field[0].length
+                && 0 <= newY && newY < field.length) {
+
+                if (field[newY][newX] instanceof cell && field[newY][newX].value > 0
+                     && field[newY][newX].next.length > 0) {
+                    return {
+                        x: newX,
+                        y: newY
+                    };
+                } else if (field[newY][newX] == 'nest') {
+                    availableNow.push({
+                        x: newX,
+                        y: newY
+                    });
+                }
+            }
+        }
+
+        return availableNow[getRandomIntInclusive(0, availableNow.length - 1)];
+    }
+
+    findFood(cords) {
+        for (const move of plodderAnt.movement) {
+            let newX = cords.x + move.xi;
+            let newY = cords.y + move.yi;
+
+            if (0 <= newX && newX < field[0].length
+                && 0 <= newY && newY < field.length) {
+
+                if (field[newY][newX] == 'water' || field[newY][newX] == 'food') {
+                    return {
+                        x: newX,
+                        y: newY
+                    };
+                }
+            }
+        }
+        return null;
+    }
+
+    goAhead() {
+        let goTo;
+
+        let additFood = this.findFood(this.cords);
+        if (additFood != null) {
+            goTo = additFood;
+        } else {
+            goTo = ((field[this.cords.y][this.cords.x] instanceof cell) == false)
+                ? this.getDirection() : field[this.cords.y][this.cords.x].getNext();
+
+            if (goTo == null) {
+                [this.prevCords, this.cords] = [this.cords, this.prevCords];
+                this.length = Infinity;
+                this.back = true;
+
+                if (field[this.cords.y][this.cords.x] instanceof cell) {
+                    field[this.cords.y][this.cords.x].deleteNext(this.prevCords);
+                    field[this.prevCords.y][this.prevCords.x].updateValue(-1);
+                }
+                return;
+
+            } else if (field[goTo.y][goTo.x] instanceof cell) {
+                this.length++;
+            }
+        }
+
+        this.prevCords = this.cords;
+        this.cords = goTo;
+
+        if (field[this.cords.y][this.cords.x] == 'water'
+            || field[this.cords.y][this.cords.x] == 'food') {
+
+            [this.prevCords, this.cords] = [this.cords, this.prevCords];
+            this.back = true;
+
+            field[this.prevCords.y][this.prevCords.x] = new cell(this.prevCords, this.length,
+                maxPheromoneOnPath / this.length, null, this.cords);
+
+            field[this.cords.y][this.cords.x].setNext(this.prevCords);
+        }
+    }
+
+    goBack() {
+        if (field[this.cords.y][this.cords.x] instanceof cell) {
+            this.prevCords = this.cords;
+            this.cords = field[this.cords.y][this.cords.x].getPrev();
+        } else {
+            this.cords = nest[getRandomIntInclusive(0, nest.length - 1)];
+            this.length = 0;
+            this.back = false;
+        }
+    }
+
+    static includes(curValue, index, arr) {
+        if (curValue.x == this.x && curValue.y == this.y) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    drawAnt() {
+        if (field[this.prevCords.y][this.prevCords.x] != 'nest') {
+            clearRect(antCtx, this.prevCords);
+        }
+
+        if (field[this.cords.y][this.cords.x] != 'nest') {
+
+            if (this.back == true) {
+                field[this.cords.y][this.cords.x].updateValue(maxPheromoneOnPath / this.length);
+            }
+
+            antCtx.fillStyle = '#35170c';
+            setRect(antCtx, this.cords);
+        }
+    }
+
+    move() {
+        if (this.back == false) {
+            this.goAhead();
+        } else {
+            this.goBack();
+        }
+        this.drawAnt();
+    }
+};
+
+//--------------------------------------------------------------------------------------------
+
+//---------------BUTTONS-------------------------------------------------------------------------
 
 let startButton = document.getElementsByClassName("start")[0];
 startButton.onclick = () => {
-    let ants = [];
-    for (let i = 0; i < 3; i++) {
-        ants.push(new hunterAnt());
+    let hunterAnts = [];
+    for (let i = 0; i < 7; i++) {
+        hunterAnts.push(new hunterAnt());
     }
+
+    let plodderAnts = [];
+    for (let i = 0; i < 15; i++) {
+        plodderAnts.push(new plodderAnt());
+    }
+
     setTimeout(function tick() {
-        for (let ant of ants) {
+        for (let ant of hunterAnts) {
             ant.move();
         }
-        setTimeout(tick, 50);
-    }, 50);
+        for (let ant of plodderAnts) {
+            ant.move();
+        }
+        for (let y = 0; y < field.length; y++) {
+            for (let x = 0; x < field[0].length; x++) {
+                if (field[y][x] instanceof cell) {
+                    field[y][x].tick();
+                }
+            }
+        }
+        setTimeout(tick, 100);
+    }, 100);
 }
 
-//---------------BUTTONS-------------------------------------------------------------------------
 let toDo = 'none';
-canvas.addEventListener('mousedown', function (e) {
+antCanvas.addEventListener('mousedown', function (e) {
     console.log(`${e.offsetX} ${e.offsetY}\n${e.clientX} ${e.clientX}`);
 
-    let newX = Math.floor(e.offsetX / 20);
-    let newY = Math.floor(e.offsetY / 20);
+    let newX = Math.floor(e.offsetX / scale);
+    let newY = Math.floor(e.offsetY / scale);
 
     switch (toDo) {
         case 'setNest':
@@ -463,13 +685,13 @@ caveButton.onclick = () => {
     for (let i = 0; i < cave.length; i++) {
         for (let j = 0; j < cave[0].length; j++) {
             if (cave[i][j] == true) {
-                ctx.fillStyle = '#FFD460';
+                ctx.fillStyle = '#9c855d';
                 field[i][j] = 'wall';
             } else {
-                ctx.fillStyle = '#F07B3F';
+                ctx.fillStyle = '#896635';
                 field[i][j] = 0;
             }
-            setRect(j, i);
+            setRect(ctx, { x: j, y: i });
         }
     }
 }
