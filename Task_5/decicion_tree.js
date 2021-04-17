@@ -172,18 +172,6 @@ class DecicionTree {
         this.split(this.root, 1);
     }
 
-    /*
-        print_tree(node, depth = 0) {
-            if (Object.prototype.toString.call(node) == Object.prototype.toString.call({ 1: 1 })) {
-                console.log(`${' '.repeat(depth)}[X${node['index'] + 1} < ${node['value']}]`);
-                this.print_tree(node['left'], depth + 1)
-                this.print_tree(node['right'], depth + 1)
-            } else {
-                console.log(`${' '.repeat(depth)}[${node}]`);
-            }
-        }
-    */
-
     async predict(node, row) {
 
         console.log(node['id']);
@@ -253,7 +241,7 @@ class DecicionTree {
             this.drawDecicionTree(node['left'], depth + 1, ul);
             this.drawDecicionTree(node['right'], depth + 1, ul);
         } else {
-            span.innerText = `${node['value']}   id=${node['id']}`;
+            span.innerText = `${node['value']}`;
             return;
         }
     }
