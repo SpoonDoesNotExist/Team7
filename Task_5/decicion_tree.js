@@ -335,6 +335,10 @@ function getAccuracy(pred, expect) {
 
 
 learnButton.onclick = async function() {
+    if (dataset.length == 0) {
+        alert('Input csv file')
+        return;
+    }
     CV_fold = CV_fold_input.value;
     max_depth = max_depth_input.value;
     min_size = min_size_input.value;
