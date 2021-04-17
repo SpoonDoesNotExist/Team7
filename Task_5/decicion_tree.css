@@ -150,6 +150,23 @@ body {
     margin-right: 0;
 }
 
+#toMain {
+    flex: auto;
+    height: auto;
+    width: auto;
+    font-weight: bold;
+    color: #000000;
+    background-color: #e2a137c2;
+    border-radius: 0.3em;
+    font-size: 22px;
+    border: none;
+    margin: 10px;
+}
+
+#toMain:link {
+    text-decoration: none;
+}
+
 body {
     font-family: Calibri, Segoe, "Segoe UI", "Gill Sans", "Gill Sans MT", sans-serif;
 }
