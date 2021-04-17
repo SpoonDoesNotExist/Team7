@@ -685,10 +685,10 @@ caveButton.onclick = () => {
     for (let i = 0; i < cave.length; i++) {
         for (let j = 0; j < cave[0].length; j++) {
             if (cave[i][j] == true) {
-                ctx.fillStyle = '#9c855d';
+                ctx.fillStyle = '#896635';
                 field[i][j] = 'wall';
             } else {
-                ctx.fillStyle = '#896635';
+                ctx.fillStyle = '#9c855d';
                 field[i][j] = 0;
             }
             setRect(ctx, { x: j, y: i });
